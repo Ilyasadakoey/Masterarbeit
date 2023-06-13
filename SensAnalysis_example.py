@@ -61,7 +61,7 @@ class SensAnalysis(object):
         # =========================================================================================
         #       Sensitivity analysis
         # =========================================================================================
-        self.N_sample = 2 ** 10  # number of samples (input) created for S.A.
+        self.N_sample = 2 ** 2  # number of samples (input) created for S.A.
         self.cut_off = 0.005  # threshold for important S.A. results
 
     "====================================   FUNCTIONS   =========================================="
@@ -154,8 +154,11 @@ class SensAnalysis(object):
     # =================================================================================================
 
     def model(self, args):
-        x, a = args
-        y = x * a
+        from compressor_roskosch_orig_rp import getETA
+        T_e, p_e,p_a= args
+        y = getETA(T_e, p_e, p_a, fluid_in='Propane * Butane', comp=[1.0, 0.],
+                   pV=[34e-3, 34e-3, 3.5, .04, .06071, 48.916, 50., 50. / 2., 2.], pZ=np.zeros(7, float),
+                   z_it=np.zeros([360, 16]), IS=360, pZyk=np.zeros(2, float), IS0=360)
         return y
 
 
@@ -172,7 +175,7 @@ if __name__ == "__main__":
     # =============================================================================
 
     SA = SensAnalysis()
-    SA.N_sample = 2 ** 10  # number of samples (2^n)
+    SA.N_sample = 2 ** 2  # number of samples (2^n)
     SA.cut_off = -1e5  # 0.01   # threshold for important S.A. results
 
     # run sensitivity analysis
