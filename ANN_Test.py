@@ -6,9 +6,9 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 
-Data = pd.read_excel("dummy.xlsx") #Einlesen der Daten
+Data = pd.read_excel("dummy2.xlsx") #Einlesen der Daten
 
-X = Data.iloc[:, 0:-2]  # Inputs: Pe,Te und Druckverhältnis
+X = Data.iloc[:, 0:-2]  # Inputs: Pe,Te, Molenbrüche und Druckverhältnis
 
 Y = Data.iloc[:, -2:]  # Outputs: Isentroper Wirkungsgrad und Liefergrad
 
