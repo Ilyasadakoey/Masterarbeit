@@ -5,6 +5,7 @@ import pandas as pd
 
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error, mean_absolute_error
+from joblib import dump, load
 
 Data = pd.read_excel("dummy2.xlsx") #Einlesen der Daten
 
@@ -22,4 +23,9 @@ NN_pred = NN.predict(Xtest)
 
 print(mean_squared_error(Ytest, NN_pred))
 print(mean_absolute_error(Ytest, NN_pred))
+
+
+dump(NN,'test123.joblib')
+
+loaded_model =load('test123.joblib')
 
