@@ -31,4 +31,6 @@ parameter_space = {
 from sklearn.model_selection import GridSearchCV
 clf = GridSearchCV(mlp_gs, parameter_space, n_jobs=-1, cv=5,error_score='raise')
 
+
+Y = np.ravel(Y)
 clf.fit(X, Y)
