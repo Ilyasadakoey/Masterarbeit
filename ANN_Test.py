@@ -13,9 +13,9 @@ X = Data.iloc[:, 0:-2]  # Inputs: Pe,Te, Molenbrüche und Druckverhältnis
 
 Y = Data.iloc[:, -2:]  # Outputs: Isentroper Wirkungsgrad und Liefergrad
 
-Xtrain, Xtest, Ytrain, Ytest = train_test_split(X, Y, random_state=0, test_size=0.7)
+Xtrain, Xtest, Ytrain, Ytest = train_test_split(X, Y, random_state=42, test_size=0.7)
 
-NN = MLPRegressor(max_iter=300, activation="relu", hidden_layer_sizes=(100, 100, 100, 100, 100, 100, 100))
+NN = MLPRegressor(max_iter=300, activation="tanh", hidden_layer_sizes=(8,8,8,8,8,8))
 
 NN.fit(Xtrain, Ytrain)
 
