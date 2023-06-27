@@ -17,14 +17,14 @@ X = Data.iloc[:, 0:-2]  # Inputs: Pe,Te, Molenbrüche und Druckverhältnis
 
 Y = Data.iloc[:, -2:]  # Outputs: Isentroper Wirkungsgrad und Liefergrad
 
-Xtrain, Xtest, Ytrain, Ytest = train_test_split(X, Y, random_state=42, test_size=0.7)
+Xtrain, Xtest, Ytrain, Ytest = train_test_split(X, Y, random_state=3, test_size=0.7)
 
 Ytest = np.ravel(Ytest)
 Ytrain = np.ravel(Ytrain)
 
 scaler = StandardScaler()
-trainX = scaler.fit_transform(Xtrain)
-testX = scaler.transform(Xtest)
+Xtrain = scaler.fit_transform(Xtrain)
+Xtest = scaler.transform(Xtest)
 
 model = SVR()
 kernel = ["linear", "rbf", "sigmoid", "poly"]
