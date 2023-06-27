@@ -8,7 +8,7 @@ from sklearn.metrics import mean_squared_error, mean_absolute_error
 from sklearn.model_selection import RandomizedSearchCV
 from sklearn.model_selection import RepeatedKFold
 from sklearn.preprocessing import StandardScaler
-from sklearn.svm import SVR
+from sklearn.neural_network import MLPRegressor
 from scipy.stats import loguniform
 
 Data = pd.read_excel("dummy2.xlsx")  # Einlesen der Daten
@@ -29,7 +29,7 @@ print(Xtest.shape)
 print(Ytest.shape)
 print(Ytrain.shape)
 
-model = SVR()
+model = MLPRegressor
 kernel = ["linear", "rbf", "sigmoid", "poly"]
 tolerance = loguniform(1e-6, 1e-3)
 C = [1, 1.5, 2, 2.5, 3]
