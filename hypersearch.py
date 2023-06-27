@@ -20,7 +20,7 @@ Y = Data.iloc[:, -1:]  # Outputs: Isentroper Wirkungsgrad und Liefergrad
 Xtrain, Xtest, Ytrain, Ytest = train_test_split(X, Y, random_state=3, test_size=0.7)
 
 
-mlp_gs = MLPClassifier(max_iter=100)
+mlp_gs = MLPClassifier(max_iter=1)
 parameter_space = {
     'hidden_layer_sizes': [(10,),(20,)],
     'activation': ['tanh', 'relu'],
