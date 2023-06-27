@@ -19,6 +19,9 @@ Y = Data.iloc[:, -2:]  # Outputs: Isentroper Wirkungsgrad und Liefergrad
 
 Xtrain, Xtest, Ytrain, Ytest = train_test_split(X, Y, random_state=42, test_size=0.7)
 
+Ytest = np.ravel(Ytest)
+Ytrain = np.ravel(Ytrain)
+
 scaler = StandardScaler()
 trainX = scaler.fit_transform(Xtrain)
 testX = scaler.transform(Xtest)
