@@ -15,34 +15,20 @@ Data = pd.read_excel("dummy2.xlsx")  # Einlesen der Daten
 
 X = Data.iloc[:, 0:-2]  # Inputs: Pe,Te, Molenbrüche und Druckverhältnis
 
-Y = Data.iloc[:, -2:]  # Outputs: Isentroper Wirkungsgrad und Liefergrad
+Y = Data.iloc[:, -1:]  # Outputs: Isentroper Wirkungsgrad und Liefergrad
 
 Xtrain, Xtest, Ytrain, Ytest = train_test_split(X, Y, random_state=3, test_size=0.7)
 
 
-scaler = StandardScaler()
-Xtrain = scaler.fit_transform(Xtrain)
-Xtest = scaler.transform(Xtest)
+mlp_gs = MLPClassifier(max_iter=100)
+parameter_space = {
+    'hidden_layer_sizes': [(10,),(20,)],
+    'activation': ['tanh', 'relu'],
+    'solver': ['sgd', 'adam'],
+    'alpha': [0.0001, 0.05],
+    'learning_rate': ['constant','adaptive'],
+}
+from sklearn.model_selection import GridSearchCV
+clf = GridSearchCV(mlp_gs, parameter_space, n_jobs=-1, cv=5,error_score='raise')
 
-print(Xtrain.shape)
-print(Xtest.shape)
-print(Ytest.shape)
-print(Ytrain.shape)
-
-model = MLPRegressor
-kernel = ["linear", "rbf", "sigmoid", "poly"]
-tolerance = loguniform(1e-6, 1e-3)
-C = [1, 1.5, 2, 2.5, 3]
-grid = dict(kernel=kernel, tol=tolerance, C=C)
-
-print("[INFO] grid searching over the hyperparameters...")
-cvFold = RepeatedKFold(n_splits=10, n_repeats=3, random_state=1)
-randomSearch = RandomizedSearchCV(estimator=model, n_jobs=-1,
-                                  cv=cvFold, param_distributions=grid,
-                                  scoring="neg_mean_squared_error", error_score='raise')
-
-searchResults = randomSearch.fit(Xtrain, Ytrain)
-
-print("[INFO] evaluating...")
-bestModel = searchResults.best_estimator_
-print("R2: {:.2f}".format(bestModel.score(Xtest, Ytest)))
+clf.fit(X, Y)
