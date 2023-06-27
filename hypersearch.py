@@ -22,9 +22,15 @@ Xtrain, Xtest, Ytrain, Ytest = train_test_split(X, Y, random_state=3, test_size=
 Ytest = np.ravel(Ytest)
 Ytrain = np.ravel(Ytrain)
 
+
 scaler = StandardScaler()
 Xtrain = scaler.fit_transform(Xtrain)
 Xtest = scaler.transform(Xtest)
+
+print(Xtrain.shape)
+print(Xtest.shape)
+print(Ytest.shape)
+print(Ytrain.shape)
 
 model = SVR()
 kernel = ["linear", "rbf", "sigmoid", "poly"]
