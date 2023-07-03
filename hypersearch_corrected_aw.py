@@ -15,23 +15,23 @@ Data = pd.read_excel("dummy2.xlsx")  # Einlesen der Daten
 
 X = Data.iloc[:, 0:-2]  # Inputs: Pe,Te, Molenbrüche und Druckverhältnis
 
-Y = Data.iloc[:, -1:]  # Outputs: Isentroper Wirkungsgrad und Liefergrad
+Y = Data.iloc[:, -2:]  # Outputs: Isentroper Wirkungsgrad und Liefergrad
 
-Xtrain, Xtest, Ytrain, Ytest = train_test_split(X, Y, random_state=3, test_size=0.7)
+Xtrain, Xtest, Ytrain, Ytest = train_test_split(X, Y, random_state=42, test_size=0.7)
 
 mlp_gs = MLPRegressor(max_iter=1000)
 parameter_space = {
-    'hidden_layer_sizes': [(10,),(20,)],
+    'hidden_layer_sizes': [(100,), (50,), (50,), (100,)],
     'activation': ['tanh', 'relu'],
     'solver': ['sgd', 'adam'],
     'alpha': [0.0001, 0.05],
-    'learning_rate': ['constant','adaptive'],
+    'learning_rate': ['constant', 'adaptive'],
 }
 from sklearn.model_selection import GridSearchCV
-clf = GridSearchCV(mlp_gs, parameter_space, n_jobs=-1, cv=5,error_score='raise')
 
+clf = GridSearchCV(mlp_gs, parameter_space, n_jobs=-1, cv=5, error_score='raise')
 
-Ytrain2 = np.ravel(Ytrain)
-clf.fit(Xtrain, Ytrain2)
+#Ytrain2 = np.ravel(Ytrain)
+clf.fit(Xtrain, Ytrain)
 
 print(f"beste Parameter: {clf.best_params_}")
