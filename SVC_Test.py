@@ -4,22 +4,18 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
-Data = pd.read_excel("dummy2.xlsx")  # Einlesen der Daten
-
-X = Data.iloc[:, 0:-2]  # Inputs: Pe,Te, Molenbrüche und Druckverhältnis
-
-Y = Data.iloc[:, -2:]  # Outputs: Isentroper Wirkungsgrad und Liefergrad
-
-#Xtrain, Xtest, Ytrain, Ytest = train_test_split(X, Y, random_state=42, test_size=0.7)
+df = pd.read_excel("dummy3.xlsx")  # Einlesen der Daten
 
 
-sc_X = StandardScaler()
-sc_Y = StandardScaler()
-X = sc_X.fit_transform(X)
-Y = np.ravel(Y)
+#scale = StandardScaler()
+#df_sc = scale.fit_transform(df)
+#df_sc = pd.DataFrame(df_sc,columns=df.columns)
 
-regressor = SVR(kernel='rbf')
+y = df['EtaS']
+X = df.drop('EtaS',axis=1)
 
+Xtrain,XTest,ytrain,ytest = train_test_split(X,y,test_size=0.7,random_state=42)
 
-regressor.fit(X,Y)
+SVM_regression = SVR()
+SVM_regression.fit(Xtrain,ytrain)
 
