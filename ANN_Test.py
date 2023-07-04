@@ -7,16 +7,15 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 from joblib import dump, load
 
-Data = pd.read_excel("dummy2.xlsx") #Einlesen der Daten
+df = pd.read_excel("dummy3.xlsx") #Einlesen der Daten
 
-X = Data.iloc[:, 0:-2]  # Inputs: Pe,Te, Molenbrüche und Druckverhältnis
+y = df['EtaS'] # Output ''
+X = df.drop('EtaS',axis=1)
 
-Y = Data.iloc[:, -2:]  # Outputs: Isentroper Wirkungsgrad und Liefergrad
-
-Xtrain, Xtest, Ytrain, Ytest = train_test_split(X, Y, random_state=42, test_size=0.7)
+Xtrain, Xtest, Ytrain, Ytest = train_test_split(X, y, random_state=42, test_size=0.7)
 
 
-NN = MLPRegressor(max_iter=1000, activation="tanh", hidden_layer_sizes=(100,),learning_rate='constant',solver='sgd',alpha=0.05)
+NN = MLPRegressor(max_iter=1000, activation="tanh", hidden_layer_sizes=(100,),learning_rate='adaptive',solver='sgd',alpha=0.0001)
 
 NN.fit(Xtrain, Ytrain)
 
