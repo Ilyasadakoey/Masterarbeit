@@ -7,7 +7,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 from joblib import dump, load
 
-df = pd.read_excel("dummy3.xlsx") #Einlesen der Daten
+df = pd.read_excel("EtaS_Out.xlsx") #Einlesen der Daten
 
 y = df['EtaS'] # Output ''
 X = df.drop('EtaS',axis=1)

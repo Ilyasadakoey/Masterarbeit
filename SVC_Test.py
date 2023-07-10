@@ -5,7 +5,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 
-df = pd.read_excel("dummy3.xlsx")  # Einlesen der Daten
+df = pd.read_excel("EtaS_Out.xlsx")  # Einlesen der Daten
 
 
 #scale = StandardScaler()
