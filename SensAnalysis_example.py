@@ -61,7 +61,7 @@ class SensAnalysis(object):
         # =========================================================================================
         #       Sensitivity analysis
         # =========================================================================================
-        self.N_sample = 2 ** 1  # number of samples (input) created for S.A.
+        self.N_sample = 2 ** 3  # number of samples (input) created for S.A.
         self.cut_off = 0.005  # threshold for important S.A. results
 
     "====================================   FUNCTIONS   =========================================="
@@ -175,7 +175,7 @@ if __name__ == "__main__":
     # =============================================================================
 
     SA = SensAnalysis()
-    SA.N_sample = 2 ** 1  # number of samples (2^n)
+    SA.N_sample = 2 ** 3  # number of samples (2^n)
     SA.cut_off = -1e5  # 0.01   # threshold for important S.A. results
 
     # run sensitivity analysis
