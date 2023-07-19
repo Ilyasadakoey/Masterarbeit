@@ -17,7 +17,11 @@ fluid = "Isobutane*Propane*Propylene"
 
 for (a,b,c) in zip(x1,x2,x3):
     evap = fprop.T_prop_sat(Tsat, fluid, composition=[a,b,c], option=1)
-    print(a,b,c)
-    print(evap)
+    psat = evap[1,1]
+    ptxt = str(psat)
+    with open ('data.txt','a') as f:
+        f.write('\n')
+        f.write(ptxt)
+
 
 
