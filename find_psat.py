@@ -8,8 +8,8 @@ x2 = [0.1,0.12,0.14,0.16,0.18,0.2,0.22,0.24,0.26]
 
 x3 = 1 - np.array(x2)-np.array(x1)
 
-Tin = 308.15
-Tsat = Tin - 10
+Tin = 278.15
+Tsat = Tin - 5
 fluid = "Isobutane*Propane*Propylene"
 
 
