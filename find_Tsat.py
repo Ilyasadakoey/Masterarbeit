@@ -9,9 +9,11 @@ x2 = [0.1,0.12,0.14,0.16,0.18,0.2,0.22,0.24,0.26]
 x3 = 1 - np.array(x2)-np.array(x1)
 
 
-p_in = 100000
+p_in = np.linspace(110000,500000,10)
 
 fluid = "Isobutane*Propane*Propylene"
+
+for p in p_in:
 
 for (a,b,c) in zip(x1,x2,x3):
     evap = fprop.p_prop_sat(p_in, fluid, composition=[a,b,c], option=1)
