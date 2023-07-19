@@ -299,13 +299,13 @@ def process_iteration(fluid, pZyk, z_it, IS, IS0, comp, pV, pZ):
     return is_eff, degree_delivery
 
 
-def getETA(T_e, p_e, p_a, fluid_in, comp, pV, pZ, z_it, IS, pZyk, IS0):
+def getETA(T_e, p_e, p_ve, fluid_in, comp, pV, pZ, z_it, IS, pZyk, IS0):
     fluid = fluid_in
     comp = comp
-
     pZ[0:6] = z_Tp(T_e, p_e, fluid,
                    comp)  # fl.zs_kg(['T','p'],[T_e,p_e],['T','p','v','u','h','s'],fluid) #state suction pipe
-    pZ[6] = p_a  # pressure in pressure pipe
+    pZ[6] = p_e*p_ve  # pressure in pressure pipe
+
     print(pZ)
     ############### set geometry ##################################
     z_it[:, 0] = np.linspace(0., 2 * np.pi, IS)
