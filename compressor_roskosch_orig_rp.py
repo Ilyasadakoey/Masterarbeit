@@ -299,7 +299,7 @@ def process_iteration(fluid, pZyk, z_it, IS, IS0, comp, pV, pZ):
     return is_eff, degree_delivery
 
 
-def getETA(T_e, p_e, p_ve, fluid_in, comp, pV, pZ, z_it, IS, pZyk, IS0):
+def getETA(T_e, p_ve, p_e, fluid_in, comp, pV, pZ, z_it, IS, pZyk, IS0):
     fluid = fluid_in
     comp = comp
     pZ[0:6] = z_Tp(T_e, p_e, fluid,
@@ -355,11 +355,11 @@ if __name__ == "__main__":
     # for T_ in np.linspace(232.39,285,10): # variation of pressure IA
     # pe = z_Tx(232.39, 0, fluid, comp)[1]  # fl.zs_kg(['T','q'],[0.,0.],['p'],fluid)[0]
     pe = 111.54
-    pa = [139.37,172.25, 210.75, 255.45, 306.96, 365.89, 432.86, 508.51, 593.5]
-    for i, v in enumerate(pa):
+    p_ve = [1,2,4,5]
+    for i, v in enumerate(p_ve):
         # pa = z_Tx(T_, 0, fluid, comp)[1]  # fl.zs_kg(['T','q'],[35.,0.],['p'],fluid)[0]
 
-        print("Drücke %2.2f kPa %2.2f kPa" % (pe, pa[i]))  # pa[i]))
+        print("Drücke %2.2f kPa %2.2f kPa" % (pe, p_ve[i]))  # pa[i]))
         # dt_all = np.linspace(200, 300, 10)
         dt = 60
         out = []
@@ -370,7 +370,7 @@ if __name__ == "__main__":
         #################################################################################################################
 
         # for dt in dt_all:
-        o1 = getETA(dt + 273.15, pe, pa[i], fluid, comp, pV, pZ, z_it, IS, pZyk, IS0)
+        o1 = getETA(dt + 273.15, p_ve[i], pe, fluid, comp, pV, pZ, z_it, IS, pZyk, IS0)
         # o1.append((np.max(z_it[:,11]) - np.min(z_it[:,11]) * pV[7]))  # mass flow
         out.append(o1)
         print(dt, o1)
