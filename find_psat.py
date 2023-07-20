@@ -8,13 +8,16 @@ x1 = df["x1"]
 x2 = df["x2"]
 x3 = df["x3"]
 
-Tin = 278.15
-Tsat = Tin - 5
+Tevap = 273.15
+T_oh = 5
+Tin = Tevap + T_oh
 fluid = "Isobutane*Propane*Propylene"
 
 for (a, b, c) in zip(x1, x2, x3):
-    evap = fprop.T_prop_sat(Tsat, fluid, composition=[a, b, c], option=1)
-    psat = evap[1, 1]
+    evap = fprop.T_prop_sat(Tevap, fluid, composition=[a, b, c], option=1)
+    psat = evap[1,1]
+    print(a,b,c)
+    print(psat)
     ptxt = str(psat)
     with open('data.txt', 'a') as f:
         f.write('\n')
