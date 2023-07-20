@@ -17,7 +17,7 @@ fluid = "Isobutane*Propane*Propylene"
 
 
 for (a,b,c) in zip(x1,x2,x3):
-    evap = fprop.p_prop_sat(200000, fluid, composition=[a,b,c], option=1)
+    evap = fprop.p_prop_sat(350000, fluid, composition=[a,b,c], option=1)
     print(a,b,c)
     print(evap)
 
