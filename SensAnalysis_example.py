@@ -155,10 +155,17 @@ class SensAnalysis(object):
 
     def model(self, args):
         from compressor_roskosch_orig_rp import getETA
-        T_e, p_ve,a,b = args
-        y = getETA(T_e,p_ve,p_e=100, fluid_in='Isobutane * Propane * Propylene', comp=[a,b,(1-a-b)],
+
+        T_e,p_ve = args
+        y = getETA(T_e,p_ve,p_e=150, fluid_in='Isobutane * Propane * Propylene', comp=[0,1,0],
                    pV=[34e-3, 34e-3, 3.5, .04, .06071, 48.916, 50., 50. / 2., 2.], pZ=np.zeros(7, float),
                    z_it=np.zeros([360, 16]), IS=360, pZyk=np.zeros(2, float), IS0=360)
+        ytxt = str(y)
+        Ttxt = str(T_e)
+        with open('data2.txt', 'a') as f:
+            f.write('\n')
+            f.write(ytxt)
+            f.write(Ttxt)
         return y
 
 
@@ -197,3 +204,5 @@ if __name__ == "__main__":
 
     e = time.time()
     print("\nRuntime = {} s ({} h)".format(np.round(e - s, 1), np.round((e - s) / 3600, 2)))
+
+
