@@ -162,10 +162,17 @@ class SensAnalysis(object):
                    z_it=np.zeros([360, 16]), IS=360, pZyk=np.zeros(2, float), IS0=360)
         ytxt = str(y)
         Ttxt = str(T_e)
+        pvetxt = str(p_ve)
+        petxt = str(150)
         with open('data2.txt', 'a') as f:
             f.write('\n')
-            f.write(ytxt)
+            f.write(petxt)
+            f.write('\n')
             f.write(Ttxt)
+            f.write('\n')
+            f.write(pvetxt)
+            f.write('\n')
+            f.write(ytxt)
         return y
 
 
