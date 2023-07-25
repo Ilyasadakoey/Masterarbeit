@@ -173,6 +173,7 @@ class SensAnalysis(object):
             f.write(pvetxt)
             f.write('\n')
             f.write(ytxt)
+            f.write('\n')
         return y
 
 
