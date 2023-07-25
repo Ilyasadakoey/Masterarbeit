@@ -295,8 +295,9 @@ def process_iteration(fluid, pZyk, z_it, IS, IS0, comp, pV, pZ):
     h_aus_s = z_ps(pZ[6], pZ[5], fluid, comp)[
         4]  # fl.zs_kg(['p','s'],[pZ[6],pZ[5]],['h'],fluid)[0]  # isentropic outlet enthalpy
     is_eff = (h_aus_s - pZ[4]) / (h_aus - pZ[4])  # isentropic efficiency
+    T_aus = z_it[cell_push_out,5]
 
-    return is_eff, degree_delivery
+    return is_eff, degree_delivery,T_aus
 
 
 def getETA(T_e, p_ve, p_e, fluid_in, comp, pV, pZ, z_it, IS, pZyk, IS0):
@@ -324,8 +325,8 @@ def getETA(T_e, p_ve, p_e, fluid_in, comp, pV, pZ, z_it, IS, pZyk, IS0):
     ##### start temperature thermal mass, only one temperature per cylce
     ##### Start value freely selectable, significantly influences iteration time
     z_it[:, 12] = 42. + 273
-    is_eff, degree_delivery = process_iteration(fluid, pZyk, z_it, IS, IS0, comp, pV, pZ)
-    return np.array((is_eff, degree_delivery))
+    is_eff, degree_delivery,T_aus = process_iteration(fluid, pZyk, z_it, IS, IS0, comp, pV, pZ)
+    return np.array((is_eff, degree_delivery,T_aus))
 
 
 def geometry(pV, pZ, z_it, fluid, IS):
