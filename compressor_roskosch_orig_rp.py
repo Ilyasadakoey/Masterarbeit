@@ -295,7 +295,7 @@ def process_iteration(fluid, pZyk, z_it, IS, IS0, comp, pV, pZ):
     h_aus_s = z_ps(pZ[6], pZ[5], fluid, comp)[
         4]  # fl.zs_kg(['p','s'],[pZ[6],pZ[5]],['h'],fluid)[0]  # isentropic outlet enthalpy
     is_eff = (h_aus_s - pZ[4]) / (h_aus - pZ[4])  # isentropic efficiency
-    T_aus = z_it[cell_push_out,5]
+    T_aus = z_it[cell_push_out,5][180]
 
     return is_eff, degree_delivery,T_aus
 
