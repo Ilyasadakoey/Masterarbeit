@@ -77,6 +77,9 @@ def getalp(z_it, i, pV):
     calculates heat transfer coefficient gas/cylinder wall
     Woschni correlation
     '''
+    if z_it[i - 1, 6] < 0 or z_it[i - 1, 5] < 0:
+        print(f"T: {z_it[i - 1, 5]}, p: {z_it[i - 1, 6]}")
+        raise ValueError()
     if z_it[i, 4] == 0 or z_it[i, 4] == 2:  # closed valves
         k = 2.28
     else:  # open valves, suction or push out
