@@ -84,12 +84,10 @@ def getalp(z_it, i, pV):
         k = 2.28
     else:  # open valves, suction or push out
         k = 5.18
-
-
     v_p = np.abs(z_it[i, 1] - z_it[i - 1, 1]) / ((z_it[i, 0] - z_it[i - 1, 0]) /
-                                                     (2. * np.pi * pV[7]))  # dX/dt
+                                                 (2. * np.pi * pV[7]))  # dX/dt
     alp = 127.93 * pV[0] ** (-.2) * (z_it[i - 1, 6] * 1e-2) ** .8 * \
-      (z_it[i - 1, 5]) ** (-.55) * (k * v_p) ** .8
+          (z_it[i - 1, 5]) ** (-.55) * (k * v_p) ** .8
     z_it[i, 13] = alp
     return z_it
 
@@ -215,7 +213,8 @@ def suction(i, fluid, z_it, comp, pV, pZyk, pZ):
 
 def process_iteration(fluid, pZyk, z_it, IS, IS0, comp, pV, pZ):
     # setting of Aeff_i, explicit function
-    M = z_mm(300, 100., fluid, comp)[-1]  # CP.PropsSI("M",fluid) # molar mass kg/mol # AW ramdom inlet conditions, molar mass constant
+    M = z_mm(300, 100., fluid, comp)[
+        -1]  # CP.PropsSI("M",fluid) # molar mass kg/mol # AW ramdom inlet conditions, molar mass constant
     pZyk[0] = 2.0415e-3 * (Rm / M) ** (-.9826) * pV[0] ** 2. / Ver0[
         0] ** 2.  # effective flow cross-section inlet, m²
     # setting of Aeff_o, implicit function relatively to average mass flow density over valve
@@ -240,7 +239,7 @@ def process_iteration(fluid, pZyk, z_it, IS, IS0, comp, pV, pZ):
                 else:
                     z_it = suction(i, fluid, z_it, comp, pV, pZyk, pZ)
 
-            if z_it[i-1,7]<100:
+            if z_it[i - 1, 7] < 100:
                 is_eff = 100
                 degree_delivery = 100
                 T_aus = 100
@@ -273,12 +272,12 @@ def process_iteration(fluid, pZyk, z_it, IS, IS0, comp, pV, pZ):
             # print("BA:",m_dichte,pV[0], error)
             pZyk[1] = 5.1109e-4 * (m_dichte) ** (-.486) * pV[0] ** 2. / Ver0[0] ** 2.  # Aeff_o neu
             z_it[0, 5:14] = z_it[-1, 5:14]  # End values of last cycle = Start values of next cycle
-            store_valm.append(z_it[-1,11])
+            store_valm.append(z_it[-1, 11])
             store_valu.append(z_it[-1, 8])
             store_valT.append(z_it[-1, 12])
 
     # Efficiency evaluation
-    plot_wanted = "yes"
+    plot_wanted = "no"
     if plot_wanted == "yes":
         plt.figure(1)
         plt.plot(z_it[:, 0], z_it[:, 11])
@@ -286,16 +285,15 @@ def process_iteration(fluid, pZyk, z_it, IS, IS0, comp, pV, pZ):
         plt.plot(z_it[:, 0], z_it[:, 8])
         plt.figure(3)
         plt.plot(z_it[:, 0], z_it[:, 12])
-        x_val = np.linspace(0, count, count-2)
+        x_val = np.linspace(0, count, count - 2)
         plt.figure(4)
         plt.plot(x_val, store_valm)
         plt.figure(5)
-        plt.plot(x_val ,store_valu)
+        plt.plot(x_val, store_valu)
         plt.figure(6)
         plt.plot(x_val, store_valT)
 
         plt.show()
-
 
     cell_push_out = find(z_it[:, 4] == 1)  # BA find()
     m_aus = np.sum(z_it[cell_push_out, 14])  # overall pushed out mass
@@ -307,7 +305,9 @@ def process_iteration(fluid, pZyk, z_it, IS, IS0, comp, pV, pZ):
     h_aus_s = z_ps(pZ[6], pZ[5], fluid, comp)[
         4]  # fl.zs_kg(['p','s'],[pZ[6],pZ[5]],['h'],fluid)[0]  # isentropic outlet enthalpy
     is_eff = (h_aus_s - pZ[4]) / (h_aus - pZ[4])  # isentropic efficiency
-    T_aus = np.sum(z_it[cell_push_out,5]*z_it[cell_push_out,14])/ m_aus
+    T_aus = np.sum(z_it[cell_push_out, 5] * z_it[cell_push_out, 14]) \
+            / m_aus #average push out Temperature in K IA
+
     return is_eff, degree_delivery,T_aus
 
 
