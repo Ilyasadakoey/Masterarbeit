@@ -12,6 +12,11 @@ Created on Thu Jan 31 17:46:25 2019
 import numpy as np
 import matplotlib.pyplot as plt
 from fl_props_compressor import z_uv, z_ps, z_Tp, z_Tx, z_mm
+import fluid_properties_rp as rp
+from ctREFPROP.ctREFPROP import REFPROPFunctionLibrary
+import os
+RP = REFPROPFunctionLibrary(os.environ['RPPREFIX'])
+_props = "REFPROP"
 
 Rm = 8.3145  # gas constant J/mol/K
 Tu = 25. + 273.15  # ambient temperature
@@ -239,7 +244,7 @@ def process_iteration(fluid, pZyk, z_it, IS, IS0, comp, pV, pZ):
                 else:
                     z_it = suction(i, fluid, z_it, comp, pV, pZyk, pZ)
 
-            if z_it[i - 1, 7] < 100:
+            if z_it[i - 1, 7] < (rp.T_prop_sat(z_it[i-1,5],fluid,composition=comp,option=1,units= RP.GETENUMdll(0, "MASS BASE SI").iEnum,props=_props)[0,3]):
                 is_eff = 100
                 degree_delivery = 100
                 T_aus = 100
