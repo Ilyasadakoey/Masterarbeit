@@ -244,6 +244,7 @@ def process_iteration(fluid, pZyk, z_it, IS, IS0, comp, pV, pZ):
                     z_it = expansion(i, fluid, z_it, comp, pV)
                 else:
                     z_it = suction(i, fluid, z_it, comp, pV, pZyk, pZ)
+
             if z_it [i-1,7]<1:
                 is_eff = 100
                 degree_delivery = 100
