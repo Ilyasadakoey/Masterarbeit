@@ -85,17 +85,13 @@ def getalp(z_it, i, pV):
     else:  # open valves, suction or push out
         k = 5.18
 
-    if z_it [i - 5, 7]<1:
-        alp = -999999
-        z_it[i,13] = alp
-        return z_it
-    else:
-        v_p = np.abs(z_it[i, 1] - z_it[i - 1, 1]) / ((z_it[i, 0] - z_it[i - 1, 0]) /
+
+    v_p = np.abs(z_it[i, 1] - z_it[i - 1, 1]) / ((z_it[i, 0] - z_it[i - 1, 0]) /
                                                      (2. * np.pi * pV[7]))  # dX/dt
-        alp = 127.93 * pV[0] ** (-.2) * (z_it[i - 1, 6] * 1e-2) ** .8 * \
-          (z_it[i - 1, 5]) ** (-.55) * (k * v_p) ** .8
-        z_it[i, 13] = alp
-        return z_it
+    alp = 127.93 * pV[0] ** (-.2) * (z_it[i - 1, 6] * 1e-2) ** .8 * \
+      (z_it[i - 1, 5]) ** (-.55) * (k * v_p) ** .8
+    z_it[i, 13] = alp
+    return z_it
 
 
 def state_th_Masse(Q, z_it, i, pV):
@@ -219,8 +215,7 @@ def suction(i, fluid, z_it, comp, pV, pZyk, pZ):
 
 def process_iteration(fluid, pZyk, z_it, IS, IS0, comp, pV, pZ):
     # setting of Aeff_i, explicit function
-    M = z_mm(300, 100., fluid, comp)[
-        -1]  # CP.PropsSI("M",fluid) # molar mass kg/mol # AW ramdom inlet conditions, molar mass constant
+    M = z_mm(300, 100., fluid, comp)[-1]  # CP.PropsSI("M",fluid) # molar mass kg/mol # AW ramdom inlet conditions, molar mass constant
     pZyk[0] = 2.0415e-3 * (Rm / M) ** (-.9826) * pV[0] ** 2. / Ver0[
         0] ** 2.  # effective flow cross-section inlet, m²
     # setting of Aeff_o, implicit function relatively to average mass flow density over valve
@@ -245,78 +240,75 @@ def process_iteration(fluid, pZyk, z_it, IS, IS0, comp, pV, pZ):
                 else:
                     z_it = suction(i, fluid, z_it, comp, pV, pZyk, pZ)
 
-            if z_it [i-1,7]<1:
+            if z_it[i-1,7]<0:
                 is_eff = 100
                 degree_delivery = 100
                 T_aus = 100
-                return is_eff,degree_delivery,T_aus
+                return is_eff, degree_delivery, T_aus
+
+
+        # error square sum T, p, T_th_average
+        error = np.sqrt((z_it[-1, 5] - z_it[0, 5]) ** 2.) + np.sqrt((z_it[-1, 6]
+                                                                     - z_it[0, 6]) ** 2.) + np.sqrt(
+            (np.average(z_it[-1, 12])
+             - np.average(z_it[0, 12])) ** 2.)
+        # print(IS,count)
+
+        if error < .01:  # two-step: first many calculations with low resolution (BA)
+            if IS == IS0:
+                IS = 10 * IS0  # then higher resolution
+                z0_ = z_it[:, :]
+                z_it = np.zeros([IS, 16])
+                z_it[:IS0, :] = z0_
+                z_it[IS0:, :] = z0_[-1, :]
+                geometry(pV, pZ, z_it, fluid, IS)  # calculate angle correctly
             else:
-
-
-                error = np.sqrt((z_it[-1, 5] - z_it[0, 5]) ** 2.) + np.sqrt((z_it[-1, 6]
-                                                                             - z_it[0, 6]) ** 2.) + np.sqrt(
-                    (np.average(z_it[-1, 12])
-                     - np.average(z_it[0, 12])) ** 2.)
-                # print(IS,count)
-
-                if error < .01:  # two-step: first many calculations with low resolution (BA)
-                    if IS == IS0:
-                        IS = 10 * IS0  # then higher resolution
-                        z0_ = z_it[:, :]
-                        z_it = np.zeros([IS, 16])
-                        z_it[:IS0, :] = z0_
-                        z_it[IS0:, :] = z0_[-1, :]
-                        geometry(pV, pZ, z_it, fluid, IS)  # calculate angle correctly
-                    else:
-                        break
-                else:
-                    cell_push_out = find(z_it[:, 4] == 1)
-                    m_aus = np.sum(z_it[cell_push_out, 14])  # overall pushed out mass
-                    t_aus = (z_it[cell_push_out[-1], 0] -
-                             z_it[cell_push_out[0], 0]) / (2. * np.pi * pV[7])  # time of push out
-                    m_dichte = m_aus / t_aus / pZyk[1]  # mass flow density kg/s/m²
-                    # print("BA:",m_dichte,pV[0], error)
-                    pZyk[1] = 5.1109e-4 * (m_dichte) ** (-.486) * pV[0] ** 2. / Ver0[0] ** 2.  # Aeff_o neu
-                    z_it[0, 5:14] = z_it[-1, 5:14]  # End values of last cycle = Start values of next cycle
-                    store_valm.append(z_it[-1, 11])
-                    store_valu.append(z_it[-1, 8])
-                    store_valT.append(z_it[-1, 12])
-
-            # Efficiency evaluation
-            plot_wanted = "no"
-            if plot_wanted == "yes":
-                plt.figure(1)
-                plt.plot(z_it[:, 0], z_it[:, 11])
-                plt.figure(2)
-                plt.plot(z_it[:, 0], z_it[:, 8])
-                plt.figure(3)
-                plt.plot(z_it[:, 0], z_it[:, 12])
-                x_val = np.linspace(0, count, count - 2)
-                plt.figure(4)
-                plt.plot(x_val, store_valm)
-                plt.figure(5)
-                plt.plot(x_val, store_valu)
-                plt.figure(6)
-                plt.plot(x_val, store_valT)
-
-                plt.show()
-
-            cell_push_out = find(z_it[:, 4] == 1)  # BA find()
+                break
+        else:
+            cell_push_out = find(z_it[:, 4] == 1)
             m_aus = np.sum(z_it[cell_push_out, 14])  # overall pushed out mass
-            m0 = np.pi * pV[0] ** 2. * pV[1] / pZ[2] / 4.  # sucked-in mass ideal compressor
+            t_aus = (z_it[cell_push_out[-1], 0] -
+                     z_it[cell_push_out[0], 0]) / (2. * np.pi * pV[7])  # time of push out
+            m_dichte = m_aus / t_aus / pZyk[1]  # mass flow density kg/s/m²
+            # print("BA:",m_dichte,pV[0], error)
+            pZyk[1] = 5.1109e-4 * (m_dichte) ** (-.486) * pV[0] ** 2. / Ver0[0] ** 2.  # Aeff_o neu
+            z_it[0, 5:14] = z_it[-1, 5:14]  # End values of last cycle = Start values of next cycle
+            store_valm.append(z_it[-1,11])
+            store_valu.append(z_it[-1, 8])
+            store_valT.append(z_it[-1, 12])
+
+    # Efficiency evaluation
+    plot_wanted = "yes"
+    if plot_wanted == "yes":
+        plt.figure(1)
+        plt.plot(z_it[:, 0], z_it[:, 11])
+        plt.figure(2)
+        plt.plot(z_it[:, 0], z_it[:, 8])
+        plt.figure(3)
+        plt.plot(z_it[:, 0], z_it[:, 12])
+        x_val = np.linspace(0, count, count-2)
+        plt.figure(4)
+        plt.plot(x_val, store_valm)
+        plt.figure(5)
+        plt.plot(x_val ,store_valu)
+        plt.figure(6)
+        plt.plot(x_val, store_valT)
+
+        plt.show()
 
 
-            degree_delivery = m_aus / m0  # degree of delivery
+    cell_push_out = find(z_it[:, 4] == 1)  # BA find()
+    m_aus = np.sum(z_it[cell_push_out, 14])  # overall pushed out mass
+    m0 = np.pi * pV[0] ** 2. * pV[1] / pZ[2] / 4.  # sucked-in mass ideal compressor
+    degree_delivery = m_aus / m0  # degree of delivery
 
-            h_aus = np.sum(z_it[cell_push_out, 9] * z_it[cell_push_out, 14]) \
-                        / m_aus  # average push out enthalpy
-            h_aus_s = z_ps(pZ[6], pZ[5], fluid, comp)[
-                4]  # fl.zs_kg(['p','s'],[pZ[6],pZ[5]],['h'],fluid)[0]  # isentropic outlet enthalpy
-            is_eff = (h_aus_s - pZ[4]) / (h_aus - pZ[4])  # isentropic efficiency
-            T_aus = np.sum(z_it[cell_push_out, 5] * z_it[cell_push_out, 14]) \
-                    / m_aus #average push out Temperature in K IA
-
-            return is_eff, degree_delivery,T_aus
+    h_aus = np.sum(z_it[cell_push_out, 9] * z_it[cell_push_out, 14]) \
+            / m_aus  # average push out enthalpy
+    h_aus_s = z_ps(pZ[6], pZ[5], fluid, comp)[
+        4]  # fl.zs_kg(['p','s'],[pZ[6],pZ[5]],['h'],fluid)[0]  # isentropic outlet enthalpy
+    is_eff = (h_aus_s - pZ[4]) / (h_aus - pZ[4])  # isentropic efficiency
+    T_aus = np.sum(z_it[cell_push_out,5]*z_it[cell_push_out,14])/ m_aus
+    return is_eff, degree_delivery,T_aus
 
 
 def getETA(T_e, p_ve, p_e, fluid_in, comp, pV, pZ, z_it, IS, pZyk, IS0):
