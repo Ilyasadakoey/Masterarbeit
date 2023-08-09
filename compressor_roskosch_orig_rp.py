@@ -316,7 +316,7 @@ def process_iteration(fluid, pZyk, z_it, IS, IS0, comp, pV, pZ):
     return is_eff, degree_delivery,T_aus
 
 
-def getETA(T_e, p_ve, p_e, fluid_in, comp, pV, pZ, z_it, IS, pZyk, IS0):
+def getETA(T_e, p_ve, p_e, dToh,fluid_in, comp, pV, pZ, z_it, IS, pZyk, IS0):
     fluid = fluid_in
     comp = comp
     pZ[0:6] = z_Tp(T_e, p_e, fluid,
