@@ -155,22 +155,34 @@ class SensAnalysis(object):
 
     def model(self, args):
         from compressor_roskosch_orig_rp import getETA
+        import fluid_properties_rp as rp
+        from ctREFPROP.ctREFPROP import REFPROPFunctionLibrary
+        import os
+        RP = REFPROPFunctionLibrary(os.environ['RPPREFIX'])
+        _props = "REFPROP"
+        _units = RP.GETENUMdll(0, "MASS BASE SI").iEnum
 
-        T_e,p_ve,p_e,a,b = args
-        y = getETA(T_e,p_ve,p_e, fluid_in='Isobutane * Propane * Propylene', comp=[a,b,1-a-b],
+        dT, p_ve, p_e, a, b = args
+        y = getETA(dT, p_ve, p_e, fluid_in='Isobutane * Propane*Propylene', comp=[a, b, 1 - a - b],
                    pV=[34e-3, 34e-3, 3.5, .04, .06071, 48.916, 50., 50. / 2., 2.], pZ=np.zeros(7, float),
                    z_it=np.zeros([360, 16]), IS=360, pZyk=np.zeros(2, float), IS0=360)
+        T_e = dT + rp.p_prop_sat(p=p_e * 1000, fluid='Isobutane * Propane*Propylene', composition=[a, b, 1 - a - b],
+                                 option=1, units=_units, props=_props)[
+            0, 0]
         ytxt = str(y)
-        Ttxt = str(T_e)
+        dTtxt = str(dT)
+        T_etxt = str(T_e)
         pvetxt = str(p_ve)
         petxt = str(p_e)
         atxt = str(a)
-        btxt=str(b)
+        btxt = str(b)
         with open('data2.txt', 'a') as f:
             f.write('\n')
             f.write(petxt)
             f.write('\n')
-            f.write(Ttxt)
+            f.write(dTtxt)
+            f.write('\n')
+            f.write(T_etxt)
             f.write('\n')
             f.write(pvetxt)
             f.write('\n')
@@ -218,5 +230,3 @@ if __name__ == "__main__":
 
     e = time.time()
     print("\nRuntime = {} s ({} h)".format(np.round(e - s, 1), np.round((e - s) / 3600, 2)))
-
-
