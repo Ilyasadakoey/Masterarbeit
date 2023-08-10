@@ -317,11 +317,11 @@ def process_iteration(fluid, pZyk, z_it, IS, IS0, comp, pV, pZ):
     return is_eff, degree_delivery,T_aus
 
 
-def getETA(dT, p_ve, p_e,fluid_in, comp, pV, pZ, z_it, IS, pZyk, IS0):
+def getETA(dT,p_ve, p_e,fluid_in, comp, pV, pZ, z_it, IS, pZyk, IS0):
     fluid = fluid_in
     comp = comp
 
-    T_e = dT + rp.p_prop_sat(p=p_e,fluid=fluid_in,composition=comp,option=1,units=_units,props=_props)[0,1]
+    T_e = dT + rp.p_prop_sat(p=p_e*1000,fluid=fluid_in,composition=comp,option=1,units=_units,props=_props)[0,0]
 
     pZ[0:6] = z_Tp(T_e, p_e, fluid,
                    comp)  # fl.zs_kg(['T','p'],[T_e,p_e],['T','p','v','u','h','s'],fluid) #state suction pipe
