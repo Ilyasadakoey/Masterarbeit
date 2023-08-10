@@ -17,6 +17,7 @@ from ctREFPROP.ctREFPROP import REFPROPFunctionLibrary
 import os
 RP = REFPROPFunctionLibrary(os.environ['RPPREFIX'])
 _props = "REFPROP"
+_units = RP.GETENUMdll(0, "MASS BASE SI").iEnum
 
 Rm = 8.3145  # gas constant J/mol/K
 Tu = 25. + 273.15  # ambient temperature
@@ -244,10 +245,10 @@ def process_iteration(fluid, pZyk, z_it, IS, IS0, comp, pV, pZ):
                 else:
                     z_it = suction(i, fluid, z_it, comp, pV, pZyk, pZ)
 
-            if z_it[i - 1, 7] < (rp.T_prop_sat(z_it[i-1,5],fluid,composition=comp,option=1,units= RP.GETENUMdll(0, "MASS BASE SI").iEnum,props=_props)[0,3]):
-                is_eff = 100
-                degree_delivery = 100
-                T_aus = 100
+            if z_it[i - 1, 7] < (rp.T_prop_sat(z_it[i-1,5],fluid,composition=comp,option=1,units= _units)[0,3]):
+                is_eff = 1
+                degree_delivery = 1
+                T_aus = 1
                 return is_eff, degree_delivery, T_aus
 
 
@@ -316,12 +317,16 @@ def process_iteration(fluid, pZyk, z_it, IS, IS0, comp, pV, pZ):
     return is_eff, degree_delivery,T_aus
 
 
-def getETA(T_e, p_ve, p_e, dToh,fluid_in, comp, pV, pZ, z_it, IS, pZyk, IS0):
+def getETA(dT, p_ve, p_e,fluid_in, comp, pV, pZ, z_it, IS, pZyk, IS0):
     fluid = fluid_in
     comp = comp
+
+    T_e = dT + rp.p_prop_sat(p=p_e,fluid=fluid_in,composition=comp,option=1,units=_units,props=_props)[0,1]
+
     pZ[0:6] = z_Tp(T_e, p_e, fluid,
                    comp)  # fl.zs_kg(['T','p'],[T_e,p_e],['T','p','v','u','h','s'],fluid) #state suction pipe
     pZ[6] = p_e*p_ve  # pressure in pressure pipe
+
 
     print(pZ)
     ############### set geometry ##################################
