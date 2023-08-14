@@ -370,13 +370,14 @@ if __name__ == "__main__":
     z_it = np.zeros([IS, 16])
     # fluid = []
     # comp = [1.0]  # must be checked BA
-    a = np.linspace(0.5, 0.9, 2)
-    #b = np.linspace(0.08, 0.4, 2)
-    pe = np.linspace(150, 300, 1)
-    dT = np.linspace(2, 25, 2)
-    p_ve = np.linspace(1.2, 8, 2)
-    fluid = 'Isobutane * Propane '
-    comp = [a,1-a]
+    a = np.linspace(0.5, 0.9, 10000)
+    b = np.linspace(0.08, 0.4, 10000)
+    pe = np.linspace(150, 300, 10000)
+    dT = np.linspace(2, 25, 10000)
+    p_ve = np.linspace(1.2, 8, 10000)
+    fluid = 'Isobutane*Propane*Propylene '
+
+    comp = [a,b,1-a-b]
 
     for i, v in enumerate(pe):
         print("Drücke %2.2f kPa %2.2f kPa" % (pe[i], pe[i]*p_ve[i]))  # pa[i]))
@@ -387,14 +388,11 @@ if __name__ == "__main__":
         pV = [34e-3, 34e-3, 3.5, .04, .06071, 48.916, 50., 50. / 2., 2.]  # parameter see above
 
         #################################################################################################################
-        comp[i] = [a[i], 1-a[i]]
-        # for dt in dt_all:
+        comp[i] = [a[i], b[i],1-a[i]-b[i]]
         o1 = getETA(dT[i], p_ve[i], pe[i], fluid, comp[i], pV, pZ, z_it, IS, pZyk, IS0)
-        # o1.append((np.max(z_it[:,11]) - np.min(z_it[:,11]) * pV[7]))  # mass flow
         out.append(o1)
         print(o1)
         out = np.array(out)
-        # plt.plot(dt_all, out)
         plt.show()
 
         ytxt = str(getETA(dT[i], p_ve[i], pe[i], fluid, comp[i], pV, pZ, z_it, IS, pZyk, IS0))
@@ -403,7 +401,7 @@ if __name__ == "__main__":
         pvetxt = str(p_ve[i])
         petxt = str(pe[i])
         atxt = str(a[i])
-        #btxt = str(b[i])
+        btxt = str(b[i])
         with open('data2.txt', 'a') as f:
             f.write('\n')
             f.write(petxt)
@@ -411,12 +409,12 @@ if __name__ == "__main__":
             f.write(dTtxt)
             f.write('\n')
             #f.write(T_etxt)
-            f.write('\n')
+            #f.write('\n')
             f.write(pvetxt)
             f.write('\n')
             f.write(atxt)
             f.write('\n')
-            # f.write(btxt)
-            # f.write('\n')
+            f.write(btxt)
+            f.write('\n')
             f.write(ytxt)
             f.write('\n')
