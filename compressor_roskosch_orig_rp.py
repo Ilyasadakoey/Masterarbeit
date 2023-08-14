@@ -15,6 +15,7 @@ from fl_props_compressor import z_uv, z_ps, z_Tp, z_Tx, z_mm
 import fluid_properties_rp as rp
 from ctREFPROP.ctREFPROP import REFPROPFunctionLibrary
 import os
+
 RP = REFPROPFunctionLibrary(os.environ['RPPREFIX'])
 _props = "REFPROP"
 _units = RP.GETENUMdll(0, "MASS BASE SI").iEnum
@@ -245,12 +246,11 @@ def process_iteration(fluid, pZyk, z_it, IS, IS0, comp, pV, pZ):
                 else:
                     z_it = suction(i, fluid, z_it, comp, pV, pZyk, pZ)
 
-            if z_it[i - 1, 7] < (rp.T_prop_sat(z_it[i-1,5],fluid,composition=comp,option=1,units= _units)[0,3]):
+            if z_it[i - 1, 7] < (rp.T_prop_sat(z_it[i - 1, 5], fluid, composition=comp, option=1, units=_units)[0, 3]):
                 is_eff = 1
                 degree_delivery = 1
                 T_aus = 1
                 return is_eff, degree_delivery, T_aus
-
 
         # error square sum T, p, T_th_average
         error = np.sqrt((z_it[-1, 5] - z_it[0, 5]) ** 2.) + np.sqrt((z_it[-1, 6]
@@ -312,21 +312,20 @@ def process_iteration(fluid, pZyk, z_it, IS, IS0, comp, pV, pZ):
         4]  # fl.zs_kg(['p','s'],[pZ[6],pZ[5]],['h'],fluid)[0]  # isentropic outlet enthalpy
     is_eff = (h_aus_s - pZ[4]) / (h_aus - pZ[4])  # isentropic efficiency
     T_aus = np.sum(z_it[cell_push_out, 5] * z_it[cell_push_out, 14]) \
-            / m_aus #average push out Temperature in K IA
+            / m_aus  # average push out Temperature in K IA
 
-    return is_eff, degree_delivery,T_aus
+    return is_eff, degree_delivery, T_aus
 
 
-def getETA(dT,p_ve, p_e,fluid_in, comp, pV, pZ, z_it, IS, pZyk, IS0):
+def getETA(dT, p_ve, p_e, fluid_in, comp, pV, pZ, z_it, IS, pZyk, IS0):
     fluid = fluid_in
     comp = comp
 
-    T_e = dT + rp.p_prop_sat(p=p_e*1000,fluid=fluid_in,composition=comp,option=1,units=_units,props=_props)[0,0]
+    T_e = dT + rp.p_prop_sat(p=p_e * 1000, fluid=fluid_in, composition=comp, option=1, units=_units, props=_props)[0, 0]
 
     pZ[0:6] = z_Tp(T_e, p_e, fluid,
                    comp)  # fl.zs_kg(['T','p'],[T_e,p_e],['T','p','v','u','h','s'],fluid) #state suction pipe
-    pZ[6] = p_e*p_ve  # pressure in pressure pipe
-
+    pZ[6] = p_e * p_ve  # pressure in pressure pipe
 
     print(pZ)
     ############### set geometry ##################################
@@ -346,8 +345,8 @@ def getETA(dT,p_ve, p_e,fluid_in, comp, pV, pZ, z_it, IS, pZyk, IS0):
     ##### start temperature thermal mass, only one temperature per cylce
     ##### Start value freely selectable, significantly influences iteration time
     z_it[:, 12] = 42. + 273
-    is_eff, degree_delivery,T_aus = process_iteration(fluid, pZyk, z_it, IS, IS0, comp, pV, pZ)
-    return np.array((is_eff, degree_delivery,T_aus))
+    is_eff, degree_delivery, T_aus = process_iteration(fluid, pZyk, z_it, IS, IS0, comp, pV, pZ)
+    return np.array((is_eff, degree_delivery, T_aus))
 
 
 def geometry(pV, pZ, z_it, fluid, IS):
@@ -371,34 +370,53 @@ if __name__ == "__main__":
     z_it = np.zeros([IS, 16])
     # fluid = []
     # comp = [1.0]  # must be checked BA
+    a = np.linspace(0.5, 0.9, 2)
+    #b = np.linspace(0.08, 0.4, 2)
+    pe = np.linspace(150, 300, 1)
+    dT = np.linspace(2, 25, 2)
+    p_ve = np.linspace(1.2, 8, 2)
+    fluid = 'Isobutane * Propane '
+    comp = [a,1-a]
 
-    fluid = 'Isobutane * Propane * Propylene '
-    comp = [0.1, 0.5, 0.4]
-    # for T_ in np.linspace(232.39,285,10): # variation of pressure IA
-    # pe = z_Tx(232.39, 0, fluid, comp)[1]  # fl.zs_kg(['T','q'],[0.,0.],['p'],fluid)[0]
-    pe = 111.54
-    p_ve = [1,2,4,5]
-    for i, v in enumerate(p_ve):
-        # pa = z_Tx(T_, 0, fluid, comp)[1]  # fl.zs_kg(['T','q'],[35.,0.],['p'],fluid)[0]
-
-        print("Drücke %2.2f kPa %2.2f kPa" % (pe, p_ve[i]))  # pa[i]))
-        # dt_all = np.linspace(200, 300, 10)
-        dt = 60
+    for i, v in enumerate(pe):
+        print("Drücke %2.2f kPa %2.2f kPa" % (pe[i], pe[i]*p_ve[i]))  # pa[i]))
         out = []
+
         ###############################     parameter set specific for compressor   ###################################
 
         pV = [34e-3, 34e-3, 3.5, .04, .06071, 48.916, 50., 50. / 2., 2.]  # parameter see above
 
         #################################################################################################################
-
+        comp[i] = [a[i], 1-a[i]]
         # for dt in dt_all:
-        o1 = getETA(dt + 273.15, p_ve[i], pe, fluid, comp, pV, pZ, z_it, IS, pZyk, IS0)
+        o1 = getETA(dT[i], p_ve[i], pe[i], fluid, comp[i], pV, pZ, z_it, IS, pZyk, IS0)
         # o1.append((np.max(z_it[:,11]) - np.min(z_it[:,11]) * pV[7]))  # mass flow
         out.append(o1)
-        print(dt, o1)
+        print(o1)
         out = np.array(out)
         # plt.plot(dt_all, out)
         plt.show()
-        fo = open("Daten.txtx", "w")
-        fo.write(str(out))
-        fo.close()
+
+        ytxt = str(getETA(dT[i], p_ve[i], pe[i], fluid, comp[i], pV, pZ, z_it, IS, pZyk, IS0))
+        dTtxt = str(dT[i])
+        #T_etxt = str(pZ[i][0])
+        pvetxt = str(p_ve[i])
+        petxt = str(pe[i])
+        atxt = str(a[i])
+        #btxt = str(b[i])
+        with open('data2.txt', 'a') as f:
+            f.write('\n')
+            f.write(petxt)
+            f.write('\n')
+            f.write(dTtxt)
+            f.write('\n')
+            #f.write(T_etxt)
+            f.write('\n')
+            f.write(pvetxt)
+            f.write('\n')
+            f.write(atxt)
+            f.write('\n')
+            # f.write(btxt)
+            # f.write('\n')
+            f.write(ytxt)
+            f.write('\n')
