@@ -162,36 +162,27 @@ class SensAnalysis(object):
         _props = "REFPROP"
         _units = RP.GETENUMdll(0, "MASS BASE SI").iEnum
 
-        dT, p_ve, p_e, a, b = args
-        y = getETA(dT, p_ve, p_e, fluid_in='Isobutane * Propane*Propylene', comp=[a, b, 1 - a - b],
+        dT, p_ve, p_e, a = args
+        y = getETA(dT, p_ve, p_e, fluid_in='Isobutane * Propane', comp=[a, 1 - a],
                    pV=[34e-3, 34e-3, 3.5, .04, .06071, 48.916, 50., 50. / 2., 2.], pZ=np.zeros(7, float),
                    z_it=np.zeros([360, 16]), IS=360, pZyk=np.zeros(2, float), IS0=360)
-        T_e = dT + rp.p_prop_sat(p=p_e * 1000, fluid='Isobutane * Propane*Propylene', composition=[a, b, 1 - a - b],
+        T_e = dT + rp.p_prop_sat(p=p_e * 1000, fluid='Isobutane * Propane', composition=[a, 1 - a],
                                  option=1, units=_units, props=_props)[
             0, 0]
-        ytxt = str(y)
+        etaStxt = str(y[0])
+        LambdaLtxt = str(y[1])
+        Touttxt = str(y[2])
         dTtxt = str(dT)
         T_etxt = str(T_e)
         pvetxt = str(p_ve)
         petxt = str(p_e)
         atxt = str(a)
-        btxt = str(b)
-        with open('data2.txt', 'a') as f:
-            f.write('\n')
-            f.write(petxt)
-            f.write('\n')
-            f.write(dTtxt)
-            f.write('\n')
-            f.write(T_etxt)
-            f.write('\n')
-            f.write(pvetxt)
-            f.write('\n')
-            f.write(atxt)
-            f.write('\n')
-            f.write(btxt)
-            f.write('\n')
-            f.write(ytxt)
-            f.write('\n')
+        # btxt = str(b)
+        list = [['pein','p2/p1','dT','xa','Tein','etaS','LamdaL','Taus'],[petxt,pvetxt,dTtxt,atxt,T_etxt,etaStxt,LambdaLtxt,Touttxt]]
+        df = pd.DataFrame(list)
+        writer = pd.ExcelWriter('test.xlsx', engine='xlsxwriter',mode= "a")
+        df.to_excel(writer,sheet_name='hallo',index=False)
+        writer.save()
         return y
 
 
