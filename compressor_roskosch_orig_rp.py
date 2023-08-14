@@ -15,6 +15,7 @@ from fl_props_compressor import z_uv, z_ps, z_Tp, z_Tx, z_mm
 import fluid_properties_rp as rp
 from ctREFPROP.ctREFPROP import REFPROPFunctionLibrary
 import os
+from tkinter import filedialog
 
 RP = REFPROPFunctionLibrary(os.environ['RPPREFIX'])
 _props = "REFPROP"
@@ -252,6 +253,7 @@ def process_iteration(fluid, pZyk, z_it, IS, IS0, comp, pV, pZ):
                 T_aus = 1
                 return is_eff, degree_delivery, T_aus
 
+
         # error square sum T, p, T_th_average
         error = np.sqrt((z_it[-1, 5] - z_it[0, 5]) ** 2.) + np.sqrt((z_it[-1, 6]
                                                                      - z_it[0, 6]) ** 2.) + np.sqrt(
@@ -368,19 +370,21 @@ if __name__ == "__main__":
     pZ = np.zeros(7, float)
     pZyk = np.zeros(2, float)
     z_it = np.zeros([IS, 16])
-    # fluid = []
-    # comp = [1.0]  # must be checked BA
-    a = np.linspace(0.5, 0.9, 10000)
-    b = np.linspace(0.08, 0.4, 10000)
-    pe = np.linspace(150, 300, 10000)
-    dT = np.linspace(2, 25, 10000)
-    p_ve = np.linspace(1.2, 8, 10000)
-    fluid = 'Isobutane*Propane*Propylene '
 
-    comp = [a,b,1-a-b]
+    filepath = filedialog.askopenfilename()
+    splitNumber = filepath.split('_')[-1].split('.')[0]
+    param_values_arr = np.load(filepath)
+    print('Parameter-Array geladen')
+    dir_path = os.path.dirname(os.path.realpath(filepath))
+    file_out_name_results = dir_path + '/Split_Result_' + str(splitNumber)
+    file_out_name_calculatedValues = dir_path + '/Split_CalculatedValues_' + str(splitNumber)
 
-    for i, v in enumerate(pe):
-        print("Drücke %2.2f kPa %2.2f kPa" % (pe[i], pe[i]*p_ve[i]))  # pa[i]))
+    fluid = "Isobutane*Propane*Propylene"
+
+    for i in range(len(param_values_arr[:, 0])):
+        parameter_values = param_values_arr[i, :]
+        p_ve, p_ein, dT, xa, xb = parameter_values
+        print("Drücke %2.2f kPa %2.2f kPa" % (p_ein, p_ein * p_ve))  # pa[i]))
         out = []
 
         ###############################     parameter set specific for compressor   ###################################
@@ -388,33 +392,17 @@ if __name__ == "__main__":
         pV = [34e-3, 34e-3, 3.5, .04, .06071, 48.916, 50., 50. / 2., 2.]  # parameter see above
 
         #################################################################################################################
-        comp[i] = [a[i], b[i],1-a[i]-b[i]]
-        o1 = getETA(dT[i], p_ve[i], pe[i], fluid, comp[i], pV, pZ, z_it, IS, pZyk, IS0)
+        comp = [xa,xb,1-xa-xb]
+        o1 = getETA(dT, p_ve, p_ein, fluid, comp, pV, pZ, z_it, IS, pZyk, IS0)
         out.append(o1)
         print(o1)
         out = np.array(out)
         plt.show()
 
-        ytxt = str(getETA(dT[i], p_ve[i], pe[i], fluid, comp[i], pV, pZ, z_it, IS, pZyk, IS0))
-        dTtxt = str(dT[i])
-        #T_etxt = str(pZ[i][0])
-        pvetxt = str(p_ve[i])
-        petxt = str(pe[i])
-        atxt = str(a[i])
-        btxt = str(b[i])
-        with open('data2.txt', 'a') as f:
-            f.write('\n')
-            f.write(petxt)
-            f.write('\n')
-            f.write(dTtxt)
-            f.write('\n')
-            #f.write(T_etxt)
-            #f.write('\n')
-            f.write(pvetxt)
-            f.write('\n')
-            f.write(atxt)
-            f.write('\n')
-            f.write(btxt)
-            f.write('\n')
-            f.write(ytxt)
-            f.write('\n')
+
+
+
+
+
+
+
