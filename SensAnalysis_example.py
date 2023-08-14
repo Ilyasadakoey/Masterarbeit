@@ -172,11 +172,11 @@ class SensAnalysis(object):
             0, 0]
 
 
-        #out = str([dT,p_ve,200,0.4,T_e,y[0],y[1],y[2]])
+        out = str([dT,p_ve,p_e,a,b,T_e,y[0],y[1],y[2]])
 
 
-        #with open('data2.txt', 'a') as f:
-            #f.write(out)
+        with open('data2.txt', 'a') as f:
+            f.write(out)
 
         return y
 
