@@ -167,7 +167,7 @@ class SensAnalysis(object):
                    pV=[34e-3, 34e-3, 3.5, .04, .06071, 48.916, 50., 50. / 2., 2.], pZ=np.zeros(7, float),
                    z_it=np.zeros([360, 16]), IS=360, pZyk=np.zeros(2, float), IS0=360)
 
-        T_e = dT + rp.p_prop_sat(p=p_e * 1000, fluid='Isobutane * Propane', composition=[a, b ,1-a-b],
+        T_e = dT + rp.p_prop_sat(p=p_e * 1000, fluid='Isobutane * Propane*Propylene', composition=[a, b ,1-a-b],
                                  option=1, units=_units, props=_props)[
             0, 0]
 
@@ -176,7 +176,9 @@ class SensAnalysis(object):
 
 
         with open('data2.txt', 'a') as f:
+            f.write("\n")
             f.write(out)
+            f.write("\n")
 
         return y
 
