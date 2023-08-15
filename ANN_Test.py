@@ -17,15 +17,14 @@ Xtrain, Xtest, Ytrain, Ytest = train_test_split(X, y, random_state=42, test_size
 
 NN = MLPRegressor(max_iter=1000, activation="tanh", hidden_layer_sizes=(100,),learning_rate='adaptive',solver='sgd',alpha=0.0001)
 
-NN.fit(Xtrain, Ytrain)
+model = NN.fit(Xtrain, Ytrain)
 
 NN_pred = NN.predict(Xtest)
 
 print(mean_squared_error(Ytest, NN_pred))
 print(mean_absolute_error(Ytest, NN_pred))
 
+dump(model,'test123.pkl')
 
-dump(NN,'test123.joblib')
 
-loaded_model =load('test123.joblib')
 
