@@ -141,7 +141,7 @@ class SensAnalysis(object):
                         plt.plot(self.param_values[:, i], self.results[:, r], "o", markersize=2)
                         plt.savefig(
                             self.file_out + self.date + '_' + self.result_labels[r] + '_' + self.names[i] + '.png')
-                        plt.show()
+                        #plt.show()
 
                     # print results in console
                     self.oii = "{0:2d}, {1:20s} S1: {2:= 9.4f}, ST: {3:= 9.4f}" \
@@ -166,16 +166,12 @@ class SensAnalysis(object):
         y = getETA(dT, p_ve, p_e, fluid_in='Isobutane * Propane*Propylene', comp=[a, b, 1-a-b],
                    pV=[34e-3, 34e-3, 3.5, .04, .06071, 48.916, 50., 50. / 2., 2.], pZ=np.zeros(7, float),
                    z_it=np.zeros([360, 16]), IS=360, pZyk=np.zeros(2, float), IS0=360)
+        T_e = dT + rp.p_prop_sat(p=p_e*1000, fluid='Isobutane * Propane*Propylene', composition=[a, b, 1-a-b],
+                                 option=1, units=_units, props=_props)[0, 0]
 
-        T_e = dT + rp.p_prop_sat(p=p_e * 1000, fluid='Isobutane * Propane*Propylene', composition=[a, b ,1-a-b],
-                                 option=1, units=_units, props=_props)[
-            0, 0]
+        out = str([p_ve,p_ve,dT,T_e,a,b,y[0],y[1],y[2]])
 
-
-        out = str([dT,p_ve,p_e,a,b,T_e,y[0],y[1],y[2]])
-
-
-        with open('data2.txt', 'a') as f:
+        with open('results.txt','a') as f:
             f.write("\n")
             f.write(out)
             f.write("\n")
@@ -215,6 +211,7 @@ if __name__ == "__main__":
     pickle.dump(results, open(SA.file_out + SA.date + "_sa_results.p", "wb"))
     pickle.dump(paramVal, open(SA.file_out + SA.date + "_sa_paramVal.p", "wb"))
     pickle.dump(SA.result_labels, open(SA.file_out + SA.date + "_sa_result_labels.p", "wb"))
+    pickle.dump(results_SA,open(SA.file_out + SA.date+ "_sa_sensis.p","wb"))
 
     e = time.time()
     print("\nRuntime = {} s ({} h)".format(np.round(e - s, 1), np.round((e - s) / 3600, 2)))
