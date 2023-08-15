@@ -169,7 +169,7 @@ class SensAnalysis(object):
         T_e = dT + rp.p_prop_sat(p=p_e*1000, fluid='Isobutane * Propane*Propylene', composition=[a, b, 1-a-b],
                                  option=1, units=_units, props=_props)[0, 0]
 
-        out = str([p_ve,p_ve,dT,T_e,a,b,y[0],y[1],y[2]])
+        out = str([p_ve,p_e,dT,T_e,a,b,y[0],y[1],y[2]])
 
         with open('results.txt','a') as f:
             f.write("\n")
