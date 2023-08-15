@@ -138,6 +138,12 @@ class SensAnalysis(object):
                         plt.xlabel(self.names[i])
                         plt.ylabel(self.result_labels[r])
                         plt.title(self.result_labels[r])
+                        plt.rc('axes', labelsize=11)
+                        plt.rc('axes', titlesize=11)
+                        # plt.rc('legend', fontsize=11)
+                        plt.rc('xtick', labelsize=11)
+                        plt.rc('ytick', labelsize=11)
+                        plt.rc('font', size=11)
                         plt.plot(self.param_values[:, i], self.results[:, r], "o", markersize=2)
                         plt.savefig(
                             self.file_out + self.date + '_' + self.result_labels[r] + '_' + self.names[i] + '.png')
@@ -178,12 +184,24 @@ class SensAnalysis(object):
                                  option=1, units=_units, props=_props)[
             0, 0]
 
-        out = str([dT, p_e, T_e, p_ve, a, b, y[0], y[1], y[2]])
+        # out = str([dT, p_e, T_e, p_ve, y[0], y[1], y[2]])
+
+        dTtxt = str(dT)
+        p_veTxt = str(p_ve)
+        p_e = str(p_e)
+        Tetxt = str(T_e)
+        atxt = str(a)
+        btxt = str(b)
+        EtaStxt = str(y[0])
+        LambdaLtxt = str(y[1])
+        Taustxt = str(y[2])
 
         with open('Results.txt', 'a') as f:
             f.write("\n")
-            f.write(out)
-            f.write("\n")
+            f.write(dTtxt), f.write("  "), f.write(p_veTxt), f.write("  "), f.write(p_e), f.write("  "), f.write(
+                atxt), f.write("  "), f.write(btxt), f.write("  "), f.write(EtaStxt), f.write("  "), f.write(
+                LambdaLtxt), f.write("  "), f.write(
+                Taustxt), f.write("  "), f.write(Tetxt)
 
         return y
 
@@ -221,4 +239,6 @@ if __name__ == "__main__":
     pickle.dump(paramVal, open(SA.file_out + SA.date + "_sa_paramVal.p", "wb"))
     pickle.dump(SA.result_labels, open(SA.file_out + SA.date + "_sa_result_labels.p", "wb"))
     e = time.time()
+    with open('Time.txt', 'a') as f:
+        f.write("\nRuntime = {} s ({} h)".format(np.round(e - s, 1), np.round((e - s) / 3600, 2)))
     # print("\nRuntime = {} s ({} h)".format(np.round(e - s, 1), np.round((e - s) / 3600, 2)))
