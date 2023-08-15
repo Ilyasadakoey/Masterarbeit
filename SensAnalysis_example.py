@@ -221,5 +221,4 @@ if __name__ == "__main__":
     pickle.dump(paramVal, open(SA.file_out + SA.date + "_sa_paramVal.p", "wb"))
     pickle.dump(SA.result_labels, open(SA.file_out + SA.date + "_sa_result_labels.p", "wb"))
     e = time.time()
-    pickle.dump()
     # print("\nRuntime = {} s ({} h)".format(np.round(e - s, 1), np.round((e - s) / 3600, 2)))
