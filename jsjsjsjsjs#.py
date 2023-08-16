@@ -55,7 +55,7 @@ class SensAnalysis(object):
         # =========================================================================================
         self.N_sample = 2 ** 1  # number of samples (input) created for S.A.
         self.cut_off = 0.005  # threshold for important S.A. results
-        self.problem = {'num_vars': 3, 'names': ['dT', 'p_ve', 'p_e'], 'bounds': [[2, 25], [2, 8], [200, 600]], }
+
     "====================================   FUNCTIONS   =========================================="
 
     # =================================================================================================
@@ -67,7 +67,7 @@ class SensAnalysis(object):
         # os.makedirs(self.file_out)
 
         # inputs for SA
-
+        self.problem = {'num_vars': 3, 'names': ['dT', 'p_ve', 'p_e'], 'bounds': [[2, 25], [2, 8], [200, 600]], }
         self.param_values = saltelli.sample(problem=self.problem, N=self.N_sample, calc_second_order=False)
         self.results = []
 
@@ -150,16 +150,17 @@ class ParallelSensAnalysis:
         self.num_processes = num_processes
 
     def run_parallel_sensitivity_analysis(self):
+
         pool = multiprocessing.Pool(processes=self.num_processes)
 
-        instances = [SensAnalysis() for _ in range(self.num_processes)]  # Erstelle Instanzen der SensAnalysis-Klasse
+        instances = [SensAnalysis() for _ in range (self.num_processes)]   # Erstelle Instanzen der SensAnalysis-Klasse
 
-        # Nutze die `map`-Funktion, um die Sensitivitätsanalyse auf die Instanzen aufzuteilen
-        pool.map(SensAnalysis.sensitivity_analysis, instances)
+        pool.map(SensAnalysis.sensitivity_analysis,instances)
+
 
         pool.close()
         pool.join()
-        #a
+
 
 
 "==========================================   RUN   =============================================="
@@ -174,7 +175,7 @@ if __name__ == "__main__":
     # Sensitivity analysis
     # =============================================================================
 
-    num_processes = 4
+    num_processes = 2
     parallel_analysis = ParallelSensAnalysis(num_processes)
     parallel_analysis.run_parallel_sensitivity_analysis()
 
