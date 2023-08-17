@@ -102,7 +102,7 @@ class SensAnalysis(object):
         self.param_values = saltelli.sample(problem=self.problem, N=self.N_sample, calc_second_order=False)
         self.results = []
 
-        print("\n______________________________________________\nrun sensitivity analyis....\n")
+        # print("\n______________________________________________\nrun sensitivity analyis....\n")
         for i in range(len(self.param_values[:, 0])):
             self.param_values_SA = self.param_values[i, :]
 
@@ -118,7 +118,7 @@ class SensAnalysis(object):
         self.result_labels = ['label'] * int(len((self.results)[0, :]))
 
         for r in range(len(self.results[0, :])):
-            print("\n >>> ", self.result_labels[r], "\n")
+            # print("\n >>> ", self.result_labels[r], "\n")
 
             self.results_SA[self.result_labels[r]] = sobol.analyze(self.problem, self.results[:, r],
                                                                    calc_second_order=False)
@@ -138,18 +138,31 @@ class SensAnalysis(object):
                         plt.xlabel(self.names[i])
                         plt.ylabel(self.result_labels[r])
                         plt.title(self.result_labels[r])
+                        plt.rc('axes', labelsize=11)
+                        plt.rc('axes', titlesize=11)
+                        # plt.rc('legend', fontsize=11)
+                        plt.rc('xtick', labelsize=11)
+                        plt.rc('ytick', labelsize=11)
+                        plt.rc('font', size=11)
                         plt.plot(self.param_values[:, i], self.results[:, r], "o", markersize=2)
                         plt.savefig(
                             self.file_out + self.date + '_' + self.result_labels[r] + '_' + self.names[i] + '.png')
-                        #plt.show()
+                        # plt.show()
 
                     # print results in console
                     self.oii = "{0:2d}, {1:20s} S1: {2:= 9.4f}, ST: {3:= 9.4f}" \
                         .format(i, self.names[i], self.si["S1"][i], self.si["ST"][i])
-                    print(self.oii)
 
-            else:
-                print("\n no sensitivity found")
+                    sensis = str(
+                        self.oii)  # erzeugt die berechneten Sensitivtäten als String und speichert diese in einer txt
+                    with open('sensis.txt', 'a') as f:
+                        f.write("\n")
+                        f.write(sensis)
+                        f.write("\n")
+                    # print(self.oii)
+
+            # else:
+            # print("\n no sensitivity found")
 
     # =================================================================================================
 
@@ -162,19 +175,33 @@ class SensAnalysis(object):
         _props = "REFPROP"
         _units = RP.GETENUMdll(0, "MASS BASE SI").iEnum
 
-        dT,p_ve,p_e,a,b = args
-        y = getETA(dT, p_ve, p_e, fluid_in='Isobutane * Propane*Propylene', comp=[a, b, 1-a-b],
+        dT, p_ve, p_e, a, b = args
+        y = getETA(dT, p_ve, p_e, fluid_in='Isobutane * Propane*Propylene', comp=[a, b, 1 - a - b],
                    pV=[34e-3, 34e-3, 3.5, .04, .06071, 48.916, 50., 50. / 2., 2.], pZ=np.zeros(7, float),
                    z_it=np.zeros([360, 16]), IS=360, pZyk=np.zeros(2, float), IS0=360)
-        T_e = dT + rp.p_prop_sat(p=p_e*1000, fluid='Isobutane * Propane*Propylene', composition=[a, b, 1-a-b],
-                                 option=1, units=_units, props=_props)[0, 0]
 
-        out = str([p_ve,p_e,dT,T_e,a,b,y[0],y[1],y[2]])
+        T_e = dT + rp.p_prop_sat(p=p_e * 1000, fluid='Isobutane * Propane*Propylene', composition=[a, b, 1 - a - b],
+                                 option=1, units=_units, props=_props)[
+            0, 0]
 
-        with open('results.txt','a') as f:
+        # out = str([dT, p_e, T_e, p_ve, y[0], y[1], y[2]])
+
+        dTtxt = str(dT)
+        p_veTxt = str(p_ve)
+        p_e = str(p_e)
+        Tetxt = str(T_e)
+        atxt = str(a)
+        btxt = str(b)
+        EtaStxt = str(y[0])
+        LambdaLtxt = str(y[1])
+        Taustxt = str(y[2])
+
+        with open('Results.txt', 'a') as f:
             f.write("\n")
-            f.write(out)
-            f.write("\n")
+            f.write(dTtxt), f.write("  "), f.write(p_veTxt), f.write("  "), f.write(p_e), f.write("  "), f.write(
+                atxt), f.write("  "), f.write(btxt), f.write("  "), f.write(EtaStxt), f.write("  "), f.write(
+                LambdaLtxt), f.write("  "), f.write(
+                Taustxt), f.write("  "), f.write(Tetxt)
 
         return y
 
@@ -211,7 +238,7 @@ if __name__ == "__main__":
     pickle.dump(results, open(SA.file_out + SA.date + "_sa_results.p", "wb"))
     pickle.dump(paramVal, open(SA.file_out + SA.date + "_sa_paramVal.p", "wb"))
     pickle.dump(SA.result_labels, open(SA.file_out + SA.date + "_sa_result_labels.p", "wb"))
-    pickle.dump(results_SA,open(SA.file_out + SA.date+ "_sa_sensis.p","wb"))
-
     e = time.time()
-    print("\nRuntime = {} s ({} h)".format(np.round(e - s, 1), np.round((e - s) / 3600, 2)))
+    with open('Time.txt', 'a') as f:
+        f.write("\nRuntime = {} s ({} h)".format(np.round(e - s, 1), np.round((e - s) / 3600, 2)))
+    # print("\nRuntime = {} s ({} h)".format(np.round(e - s, 1), np.round((e - s) / 3600, 2)))
