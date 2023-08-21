@@ -1,0 +1,47 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.neural_network import MLPClassifier, MLPRegressor
+import pandas as pd
+
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
+from joblib import dump, load
+from sklearn.preprocessing import MinMaxScaler
+
+
+df = pd.read_excel("Datensatz.xlsx") #Einlesen der Daten
+
+y = df['EtaS'] # Output ''
+X = df.iloc[:, [0,1,2,3,4]]
+
+
+
+
+
+Xtrain, Xtest, Ytrain, Ytest = train_test_split(X, y, random_state=10, test_size=0.2)
+
+
+NN = MLPRegressor(activation="tanh", hidden_layer_sizes=(100,100,100),learning_rate='adaptive',solver='adam',alpha=0.0001)
+
+model = NN.fit(Xtrain, Ytrain)
+
+NN_pred = NN.predict(Xtest)
+
+print(mean_squared_error(Ytest, NN_pred))
+print(mean_absolute_error(Ytest, NN_pred))
+print(r2_score(Ytest,NN_pred))
+
+#with open ('vorhergesagt.txt','a') as f:
+ #   for v in Ytest:
+
+  #      f.write(str(v)+ '\n')
+
+plt.scatter(Ytest,NN_pred,s=5)
+plt.plot([min(Ytest), max(Ytest)], [min(NN_pred), max(NN_pred)], linestyle='--', color='gray', label='1:1-Linie')
+
+plt.show()
+
+dump(model,'EtaA_MLP.pkl')
+
+
+
