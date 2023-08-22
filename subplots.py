@@ -12,7 +12,10 @@ y = df['p_e']
 Z1 = df ['xa']
 Z2 = df['dT']
 
-fig, (ax1,ax2) = plt.subplots(1,2,figsize=(8.27,11.69))
+fig, (ax1,ax2) = plt.subplots(1,2,figsize=(12,15),sharey=True)
+
+ax1.set_position([0.1, 0.1, 0.35, 0.8])  # [links, unten, breite, höhe]
+ax2.set_position([0.55, 0.1, 0.35, 0.8])
 
 im1 = ax1.scatter(x,y,c=Z1,cmap='viridis')
 ax1.set_xlabel('Eintrittstemperatur / K',fontsize = 15)
