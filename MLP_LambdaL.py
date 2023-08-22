@@ -42,13 +42,16 @@ print(r2_score(Ytest,NN_pred))
   #      f.write(str(v) + '\n')
 
 plt.scatter(Ytest,NN_pred,s=5)
-plt.xlabel('Wahrer Wert / _',fontsize = 12)
+plt.xlabel('Wahrer Wert / -',fontsize = 12)
 plt.ylabel('Vorhergesagter Wert / -', fontsize = 12)
 plt.title('Liefergrad',fontsize = 12)
 plt.xticks(fontsize = 12)
 plt.yticks(fontsize = 12)
 plt.plot([min(Ytest), max(Ytest)], [min(NN_pred), max(NN_pred)], linestyle='--', color='red', label='1:1-Linie')
-
+plt.gca().spines['top'].set_linewidth(2)
+plt.gca().spines['right'].set_linewidth(2)
+plt.gca().spines['bottom'].set_linewidth(2)
+plt.gca().spines['left'].set_linewidth(2)
 plt.show()
 
 dump(model,'LambdaL_MLP.pkl')

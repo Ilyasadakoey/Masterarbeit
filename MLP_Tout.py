@@ -49,6 +49,10 @@ plt.ylabel('Vorhergesagter Wert / K', fontsize = 12)
 plt.title('Austrittstemperatur',fontsize = 12)
 plt.xticks(fontsize = 12)
 plt.yticks(fontsize = 12)
+plt.gca().spines['top'].set_linewidth(2)
+plt.gca().spines['right'].set_linewidth(2)
+plt.gca().spines['bottom'].set_linewidth(2)
+plt.gca().spines['left'].set_linewidth(2)
 
 plt.show()
 
