@@ -44,6 +44,11 @@ with open('wahr.txt', 'a') as f:
 
 plt.scatter(Ytest,NN_pred,s=5)
 plt.plot([min(Ytest), max(Ytest)], [min(NN_pred), max(NN_pred)], linestyle='--', color='red', label='1:1-Linie')
+plt.xlabel('Wahrer Wert',fontsize = 12)
+plt.ylabel('Vorhergesagter Wert', fontsize = 12)
+plt.title('Austrittstemperatur',fontsize = 12)
+plt.xticks(fontsize = 12)
+plt.yticks(fontsize = 12)
 
 plt.show()
 
