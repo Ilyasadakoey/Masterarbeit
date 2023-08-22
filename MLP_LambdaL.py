@@ -52,6 +52,10 @@ plt.gca().spines['top'].set_linewidth(2)
 plt.gca().spines['right'].set_linewidth(2)
 plt.gca().spines['bottom'].set_linewidth(2)
 plt.gca().spines['left'].set_linewidth(2)
+
+save_path = 'C:\\Users\\ilyas\\OneDrive\\Desktop\\'
+plt.savefig(save_path+'MLPforLambdaL',dpi=500)
+
 plt.show()
 
 dump(model,'LambdaL_MLP.pkl')

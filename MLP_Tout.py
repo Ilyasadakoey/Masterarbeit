@@ -54,6 +54,9 @@ plt.gca().spines['right'].set_linewidth(2)
 plt.gca().spines['bottom'].set_linewidth(2)
 plt.gca().spines['left'].set_linewidth(2)
 
+save_path = 'C:\\Users\\ilyas\\OneDrive\\Desktop\\'
+plt.savefig(save_path+'MLPforTout',dpi=500)
+
 plt.show()
 
 dump(model,'Tout_MLP.pkl')
