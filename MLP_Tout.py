@@ -47,7 +47,7 @@ plt.plot([min(Ytest), max(Ytest)], [min(NN_pred), max(NN_pred)], linestyle='--',
 
 plt.show()
 
-dump(model,'EtaA_MLP.pkl')
+dump(model,'Tout_MLP.pkl')
 
 
 
