@@ -14,6 +14,8 @@ df = pd.read_excel("Datensatz.xlsx") #Einlesen der Daten
 y = df['EtaS'] # Output ''
 X = df.iloc[:, [0,1,2,3,4]]
 
+scaler = MinMaxScaler()
+X = scaler.fit_transform(X, y)
 
 
 
@@ -21,7 +23,7 @@ X = df.iloc[:, [0,1,2,3,4]]
 Xtrain, Xtest, Ytrain, Ytest = train_test_split(X, y, random_state=10, test_size=0.2)
 
 
-NN = MLPRegressor(activation="tanh", hidden_layer_sizes=(100,100,100),learning_rate='adaptive',solver='adam',alpha=0.0001)
+NN = MLPRegressor(activation="relu", hidden_layer_sizes=(100,100,100),learning_rate='constant',solver='adam',alpha=0.0001)
 
 model = NN.fit(Xtrain, Ytrain)
 
