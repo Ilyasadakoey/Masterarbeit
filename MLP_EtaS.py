@@ -29,7 +29,7 @@ model = NN.fit(Xtrain, Ytrain)
 
 NN_pred = NN.predict(Xtest)
 
-print(mean_squared_error(Ytest, NN_pred))
+print(np.sqrt(mean_squared_error(Ytest, NN_pred)))
 print(mean_absolute_error(Ytest, NN_pred))
 print(r2_score(Ytest,NN_pred))
 
@@ -54,10 +54,10 @@ plt.gca().spines['right'].set_linewidth(2)
 plt.gca().spines['bottom'].set_linewidth(2)
 plt.gca().spines['left'].set_linewidth(2)
 
-save_path = 'C:\\Users\\ilyas\\OneDrive\\Desktop\\'
-plt.savefig(save_path+'MLPforEtaS',dpi=500)
+#save_path = 'C:\\Users\\ilyas\\OneDrive\\Desktop\\'
+#plt.savefig(save_path+'MLPforEtaS',dpi=500)
 
-#plt.show()
+plt.show()
 
 dump(model,'EtaA_MLP.pkl')
 
