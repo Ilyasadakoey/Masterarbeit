@@ -33,14 +33,14 @@ print(np.sqrt(mean_squared_error(Ytest, NN_pred)))
 print(mean_absolute_error(Ytest, NN_pred))
 print(r2_score(Ytest,NN_pred))
 
-with open ('vorhergesagt.txt','a') as f:
-     for v in NN_pred:
+#with open ('vorhergesagt.txt','a') as f:
+    # for v in NN_pred:
 
-        f.write(str(v)+ '\n')
+        #f.write(str(v)+ '\n')
 
-with open('wahr.txt', 'a') as f:
-    for v in Ytest:
-        f.write(str(v) + '\n')
+#with open('wahr.txt', 'a') as f:
+  #  for v in Ytest:
+   #     f.write(str(v) + '\n')
 
 plt.scatter(Ytest,NN_pred,s=5)
 plt.plot([min(Ytest), max(Ytest)], [min(NN_pred), max(NN_pred)], linestyle='--', color='red', label='1:1-Linie')
