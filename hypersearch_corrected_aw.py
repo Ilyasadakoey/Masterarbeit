@@ -10,18 +10,23 @@ from sklearn.model_selection import RepeatedKFold
 from sklearn.preprocessing import StandardScaler
 from sklearn.neural_network import MLPRegressor
 from scipy.stats import loguniform
+from sklearn.preprocessing import MinMaxScaler
 
-Data = pd.read_excel("dummy2.xlsx")  # Einlesen der Daten
+Data = pd.read_excel("Datensatz.xlsx")  # Einlesen der Daten
 
-X = Data.iloc[:, 0:-2]  # Inputs: Pe,Te, Molenbrüche und Druckverhältnis
+X = Data.iloc[:, [0,1,2,3,4]]  # Inputs: Pe,Te, Molenbrüche und Druckverhältnis
 
-Y = Data.iloc[:, -2:]  # Outputs: Isentroper Wirkungsgrad und Liefergrad
+Y = Data['T_a']  # Outputs: Isentroper Wirkungsgrad und Liefergrad
 
-Xtrain, Xtest, Ytrain, Ytest = train_test_split(X, Y, random_state=42, test_size=0.7)
+scaler = MinMaxScaler()
 
-mlp_gs = MLPRegressor(max_iter=1000)
+X = scaler.fit_transform(X,Y)
+
+Xtrain, Xtest, Ytrain, Ytest = train_test_split(X, Y, random_state=10, test_size=0.2)
+
+mlp_gs = MLPRegressor()
 parameter_space = {
-    'hidden_layer_sizes': [(100,), (50,), (50,), (100,)],
+    'hidden_layer_sizes': [(100), (100,100), (100,100,100),],
     'activation': ['tanh', 'relu'],
     'solver': ['sgd', 'adam'],
     'alpha': [0.0001, 0.05],
@@ -29,7 +34,7 @@ parameter_space = {
 }
 from sklearn.model_selection import GridSearchCV
 
-clf = GridSearchCV(mlp_gs, parameter_space, n_jobs=-1, cv=15, error_score='raise')
+clf = RandomizedSearchCV(mlp_gs, parameter_space, n_iter = 30, cv=5, verbose = 2 ,scoring='neg_mean_squared_error')
 
 #Ytrain2 = np.ravel(Ytrain)
 clf.fit(Xtrain, Ytrain)
