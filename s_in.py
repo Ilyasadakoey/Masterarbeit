@@ -22,8 +22,6 @@ xb = df['xb']
 
 for i,v in enumerate(T_in):
 
-    v_spez = rp.tp(T_in[i],p_in[i]*1000,"Isobutane*Propane*Propylen",composition=[xa[i],xb[i],1-xa[i]-xb[i]],option=1,units=_units,props=_props)[3]
+    s_in = rp.tp(T_in[i],p_in[i]*1000,'Isobutane*Propane*Propylen',composition=[xa[i],xb[i],1-xa[i]-xb[i]],option=1,units=_units,props=_props)
 
-    with open('rho_in.txt','a') as f:
-             f.write(str(1/v_spez)+'\n')
-
+    print(s_in)
