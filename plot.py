@@ -4,16 +4,18 @@ import pandas as pd
 
 df = pd.read_excel("Datensatz.xlsx")
 
-x = df['T_e']
-y = df['p_e']
-Z = df['xa']
+x = df['p_ve']
+y = df['T_a']
+Z = df['rho_in']
 
 # Streudiagramm mit Farbskala erstellen
 
-scatter = plt.scatter(x, y, c=Z, cmap='cividis', s=10)
-colorbar = plt.colorbar(scatter, label='Molenbruch Isobutan / -')
+plt.rcParams["font.family"]="Arial"
 
-colorbar.set_label('Molenbruch Isobutan / -', fontsize=12)
+scatter = plt.scatter(x, y, c=Z, cmap='cividis', s=10)
+colorbar = plt.colorbar(scatter, label='Eintrittsdichte / kg/m³')
+
+colorbar.set_label('Eintrittsdichte / kg/m³', fontsize=12)
 
 plt.grid(True)
 
@@ -23,8 +25,8 @@ plt.xlim(0)
 plt.ylim(0)
 
 # Achsenbeschriftungen
-plt.xlabel('Eintrittstemperatur / K', fontsize=12)
-plt.ylabel('Eintrittsdruck / kPa', fontsize=12)
+plt.xlabel('Druckverhältnis / -', fontsize=12)
+plt.ylabel('Austrittstemperatur / K', fontsize=12)
 
 plt.xticks(fontsize=12)
 plt.yticks(fontsize=12)
@@ -40,5 +42,9 @@ plt.gca().spines['left'].set_linewidth(2)
 
 
 
+
 save_path = 'C:\\Users\\ilyas\\OneDrive\\Desktop\\'
-plt.savefig(save_path+'test',dpi=500)
+plt.savefig(save_path+'Tout_rhoin.png',dpi=500)
+
+
+plt.show()
