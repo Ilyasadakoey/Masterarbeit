@@ -29,8 +29,26 @@ print(mean_absolute_error(y, predictions))
 print(r2_score(y,predictions))
 print(mean)
 
-print(predictions)
+
+
+
+
+plt.rcParams["font.family"]="Arial"
+plt.xlabel('Wahrer Wert / -',fontsize = 11)
+plt.ylabel('Vorhergesagter Wert / -', fontsize = 11)
+plt.title('Liefergrad für ein binäres Gemisch',fontsize = 11)
+plt.xticks(fontsize = 11)
+plt.yticks(fontsize = 11)
+plt.gca().spines['top'].set_linewidth(2)
+plt.gca().spines['right'].set_linewidth(2)
+plt.gca().spines['bottom'].set_linewidth(2)
+plt.gca().spines['left'].set_linewidth(2)
 
 plt.scatter(y,predictions,s=5)
 plt.plot([min(y), max(y)], [min(predictions), max(predictions)], linestyle='--', color='red', label='1:1-Linie')
+
+save_path = 'C:\\Users\\ilyas\\OneDrive\\Desktop\\'
+plt.savefig(save_path+'Pred_LambdaL_binary',dpi=500)
+
+
 plt.show()
