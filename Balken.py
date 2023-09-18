@@ -3,8 +3,8 @@ import numpy as np
 
 # Daten für das Balkendiagramm
 categories = ['x\u2081', 'x\u2082', 'ΔT', 'Π','p\u1D62']
-values1 = [0.0022,0.0003,0.1869,0.543,0.3339]
-values2 = [0.0013,0.0001,0.1702,0.5064,0.3263]
+values1 = [0.0022,0.0003,0.1869,0.6594,0.1537]
+values2 = [0.0013,0.0001,0.1702,0.6492,0.1639]
 
 
 
@@ -37,7 +37,7 @@ ax.legend()
 # Zeige das Diagramm an
 
 save_path = 'C:\\Users\\ilyas\\OneDrive\\Desktop\\'
-plt.savefig(save_path+'Sens_Tout.png',dpi=500)
+plt.savefig(save_path+'Sens_LambdaL.png',dpi=500)
 plt.show()
 
 

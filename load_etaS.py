@@ -8,44 +8,43 @@ from sklearn.preprocessing import MinMaxScaler
 
 df = pd.read_excel("binarymixture2.xlsx")
 
-x = df.iloc[:, [0,1,2]]
+x = df.iloc[:, [0, 1, 2]]
 y = df['etaS']
 
 scaler = MinMaxScaler()
 X = scaler.fit_transform(x)
 
-loaded_model = jb.load('EtaS_MLP_sens2.pkl')
-
-
+loaded_model = jb.load('EtaS_MLP_sens.pkl')
 
 predictions = loaded_model.predict(X)
 
+#with open('vorhergesagt_eta_sens2.txt', 'a') as f:
+ #   for v in predictions:
+  #      f.write(str(v) + '\n')
 
 n = np.sum(y)
-mean = n/len(y)
+mean = n / len(y)
 
 print(np.sqrt(mean_squared_error(y, predictions)))
 print(mean_absolute_error(y, predictions))
-print(r2_score(y,predictions))
+print(r2_score(y, predictions))
 print(mean)
 
-
-plt.rcParams["font.family"]="Arial"
-plt.xlabel('Wahrer Wert / -',fontsize = 11)
-plt.ylabel('Vorhergesagter Wert / -', fontsize = 11)
-plt.title('Isentroper Wirkungsgrad für ein binäres Gemisch',fontsize = 11)
-plt.xticks(fontsize = 11)
-plt.yticks(fontsize = 11)
+plt.rcParams["font.family"] = "Arial"
+plt.xlabel('Wahrer Wert / -', fontsize=11)
+plt.ylabel('Vorhergesagter Wert / -', fontsize=11)
+#plt.title('', fontsize=11)
+plt.xticks(fontsize=11)
+plt.yticks(fontsize=11)
 plt.gca().spines['top'].set_linewidth(2)
 plt.gca().spines['right'].set_linewidth(2)
 plt.gca().spines['bottom'].set_linewidth(2)
 plt.gca().spines['left'].set_linewidth(2)
 
-plt.scatter(y,predictions,s=5)
+plt.scatter(y, predictions, s=5)
 plt.plot([min(y), max(y)], [min(predictions), max(predictions)], linestyle='--', color='red', label='1:1-Linie')
 
 save_path = 'C:\\Users\\ilyas\\OneDrive\\Desktop\\'
-plt.savefig(save_path+'Pred_etaS_binary',dpi=500)
-
+plt.savefig(save_path + 'Pred_etaS_b', dpi=100)
 
 plt.show()

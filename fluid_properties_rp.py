@@ -557,4 +557,4 @@ if __name__ == "__main__":
     # ex1 = hp_exergy(h_0_s, p_sur, secondary_fluid, props=_props)
     # ex2 = hp_exergy(h_0, p_sur, working_fluid, props=_props)
     # print( "Exergies (J/kg):", ex1, ex2)
-    print(p_prop_sat(p_0, fluid_s, composition=comp, props=_props))
+    print(p_prop_sat(p_0, fluid_s, composition=comp, props=_props)[1,3])

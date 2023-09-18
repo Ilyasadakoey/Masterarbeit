@@ -18,9 +18,14 @@ pred = df['etaS_']
 
 n = np.sum(real)
 
+n2 = np.sum(pred)
+
 mean = n/len(real)
 
-print(mean)
+mean2 = n2/len(pred)
+
+
+print(mean,mean2)
 
 rmse = np.sqrt(mean_squared_error(real,pred))
 

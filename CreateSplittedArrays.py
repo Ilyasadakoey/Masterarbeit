@@ -17,17 +17,8 @@ import pandas as pd
 from SALib.sample import saltelli
 
 ### Definiere Saltelli-Problem - Dictionary ###
-problem = {
-    'num_vars': 5,
-    'names': ['p_ve', 'p_ein', 'dT', 'xa', 'xb'],
-    'bounds': [[1.2, 8],
-               [150, 500],
-               [2, 25],
-               [0.5, 0.9],
-               [0.08, 0.3],
-               ],
-    'dists': ['unif', 'unif', 'unif', 'unif', 'unif']
-}
+problem = {'num_vars': 5, 'names': ['dT', 'p_ve', 'p_e','a','b'],
+              'bounds': [[2, 25], [2, 8], [200, 600],[0.5,0.7],[0.05,0.29]], 'dists': ['unif', 'unif', 'unif','unif','unif']}
 
 # Erstellt eine Variable "dir_path", die den absoluten Pfad des Verzeichnisses enthält, in dem die Python-Datei ausgeführt wird.
 dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -36,7 +27,7 @@ dir_path = os.path.dirname(os.path.realpath(__file__))
 # problem_load = pickle.load(open(dir_path + "/problem_dict.p", "rb"))
 
 # Number of samples (input) created for S.A.; -> N * (D + 2)
-N_sample = 2 ** 13
+N_sample = 2 ** 9
 
 # Totale Saltelli-Sample-Verteilung
 N_total = N_sample * (problem['num_vars'] + 2)
@@ -45,7 +36,7 @@ N_total = N_sample * (problem['num_vars'] + 2)
 sample_set = saltelli.sample(problem=problem, N=N_sample, calc_second_order=False)
 
 # Anzahl an einzelnen Arrays
-parts = math.ceil(N_total / 1500)
+parts = math.ceil(N_total / 225)
 
 
 

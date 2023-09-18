@@ -35,3 +35,4 @@ plt.text(0.4,150,'Gasphase',style='normal')
 #plt.title('p-xy Diagramm von Isobutan-Propan bei 5°C')
 plt.legend()
 plt.show()
+

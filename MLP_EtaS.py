@@ -14,8 +14,12 @@ df = pd.read_excel("Datensatz.xlsx") #Einlesen der Daten
 y = df['EtaS'] # Output ''
 X = df.iloc[:, [0,1,2,3,4]]
 
+
+
 scaler = MinMaxScaler()
 X = scaler.fit_transform(X, y)
+
+
 
 
 
@@ -23,43 +27,49 @@ X = scaler.fit_transform(X, y)
 Xtrain, Xtest, Ytrain, Ytest = train_test_split(X, y, random_state=10, test_size=0.2)
 
 
-NN = MLPRegressor(activation="relu", hidden_layer_sizes=(100,100,100),learning_rate='constant',solver='adam',alpha=0.0001)
+NN = MLPRegressor(activation="relu", hidden_layer_sizes=(300,300,300),learning_rate='adaptive',solver='adam',alpha=0.0001)
 
 model = NN.fit(Xtrain, Ytrain)
 
 NN_pred = NN.predict(Xtest)
 
+n = np.sum(Ytrain)
+mean = n/len(Ytrain)
+
 print(np.sqrt(mean_squared_error(Ytest, NN_pred)))
 print(mean_absolute_error(Ytest, NN_pred))
 print(r2_score(Ytest,NN_pred))
+print(mean)
 
-#with open ('vorhergesagt.txt','a') as f:
-    # for v in NN_pred:
+#with open ('vorhergesagt_eta_sens.txt','a') as f:
+ #    for v in NN_pred:
 
-        #f.write(str(v)+ '\n')
+  #      f.write(str(v)+ '\n')
 
-#with open('wahr.txt', 'a') as f:
-  #  for v in Ytest:
-   #     f.write(str(v) + '\n')
+#with open('wahr_eta_sens.txt', 'a') as f:
+ #  for v in Ytest:
+  #     f.write(str(v) + '\n')
 
+
+plt.rcParams["font.family"]="Arial"
 plt.scatter(Ytest,NN_pred,s=5)
 plt.plot([min(Ytest), max(Ytest)], [min(NN_pred), max(NN_pred)], linestyle='--', color='red', label='1:1-Linie')
-plt.xlabel('Wahrer Wert / -',fontsize = 12)
-plt.ylabel('Vorhergesagter Wert / -', fontsize = 12)
-plt.title('Isentroper Wirkungsgrad',fontsize = 12)
-plt.xticks(fontsize = 12)
-plt.yticks(fontsize = 12)
+plt.xlabel('Wahrer Wert / -',fontsize = 11)
+plt.ylabel('Vorhergesagter Wert / -', fontsize = 11)
+plt.title('Isentroper Wirkungsgrad mit der Eintrittsdichte als zusätzliche Größe',fontsize = 11)
+plt.xticks(fontsize = 11)
+plt.yticks(fontsize = 11)
 plt.gca().spines['top'].set_linewidth(2)
 plt.gca().spines['right'].set_linewidth(2)
 plt.gca().spines['bottom'].set_linewidth(2)
 plt.gca().spines['left'].set_linewidth(2)
 
 #save_path = 'C:\\Users\\ilyas\\OneDrive\\Desktop\\'
-#plt.savefig(save_path+'MLPforEtaS',dpi=500)
+#plt.savefig(save_path+'MLPforEtaS_rho',dpi=500)
 
-plt.show()
+#plt.show()
 
-dump(model,'EtaA_MLP.pkl')
+dump(model,'EtaS_MLP_alle.pkl')
 
 
 

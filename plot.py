@@ -6,16 +6,16 @@ df = pd.read_excel("Datensatz.xlsx")
 
 x = df['p_ve']
 y = df['T_a']
-Z = df['rho_in']
+Z = df['p_e']
 
 # Streudiagramm mit Farbskala erstellen
 
 plt.rcParams["font.family"]="Arial"
 
 scatter = plt.scatter(x, y, c=Z, cmap='cividis', s=10)
-colorbar = plt.colorbar(scatter, label='Eintrittsdichte / kg/m³')
+colorbar = plt.colorbar(scatter, label='Eintrittsdruck / kPa')
 
-colorbar.set_label('Eintrittsdichte / kg/m³', fontsize=12)
+colorbar.set_label('Eintrittsdruck / kPa', fontsize=12)
 
 plt.grid(True)
 
@@ -44,7 +44,7 @@ plt.gca().spines['left'].set_linewidth(2)
 
 
 save_path = 'C:\\Users\\ilyas\\OneDrive\\Desktop\\'
-plt.savefig(save_path+'Tout_rhoin.png',dpi=500)
+plt.savefig(save_path+'LambdaL_Pin.png',dpi=500)
 
 
 plt.show()

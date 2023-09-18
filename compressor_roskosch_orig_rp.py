@@ -327,7 +327,7 @@ def getETA(dT, p_ve, p_e, fluid_in, comp, pV, pZ, z_it, IS, pZyk, IS0):
                    comp)  # fl.zs_kg(['T','p'],[T_e,p_e],['T','p','v','u','h','s'],fluid) #state suction pipe
     pZ[6] = p_e * p_ve  # pressure in pressure pipe
 
-    print(pZ)
+    #print(pZ)
     ############### set geometry ##################################
     z_it[:, 0] = np.linspace(0., 2 * np.pi, IS)
     z_it[:, 1] = -(pV[1] / 2. * (1. - np.cos(z_it[:, 0]) + pV[2] *

@@ -7,10 +7,10 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 from joblib import dump, load
 
-df = pd.read_excel("EtaS_Out.xlsx") #Einlesen der Daten
+df = pd.read_excel("LambdaL_Out.xlsx") #Einlesen der Daten
 
-y = df['EtaS'] # Output ''
-X = df.drop('EtaS',axis=1)
+y = df['LambdaL'] # Output ''
+X = df.drop('LambdaL',axis=1)
 
 Xtrain, Xtest, Ytrain, Ytest = train_test_split(X, y, random_state=42, test_size=0.7)
 

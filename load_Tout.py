@@ -8,13 +8,13 @@ from sklearn.preprocessing import MinMaxScaler
 
 df = pd.read_excel("binarymixture2.xlsx")
 
-x = df.iloc[:, [0,1,2]]
+x = df.iloc[:, [0,1,2,3,4]]
 y = df['Taus']
 
 scaler = MinMaxScaler()
 X = scaler.fit_transform(x)
 
-loaded_model = jb.load('Tout_MLP.pkl')
+loaded_model = jb.load('Tout_MLP_alle.pkl')
 
 
 
@@ -46,7 +46,7 @@ plt.scatter(y,predictions,s=5)
 plt.plot([min(y), max(y)], [min(predictions), max(predictions)], linestyle='--', color='red', label='1:1-Linie')
 
 save_path = 'C:\\Users\\ilyas\\OneDrive\\Desktop\\'
-plt.savefig(save_path+'Pred_Tout_binary',dpi=500)
+plt.savefig(save_path+'Pred_Tout_binary_alle',dpi=500)
 
 
 plt.show()
