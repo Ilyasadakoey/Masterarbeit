@@ -8,13 +8,13 @@ from sklearn.preprocessing import MinMaxScaler
 
 df = pd.read_excel("binarymixture2.xlsx")
 
-x = df.iloc[:, [0,1,2,3,4]]
+x = df.iloc[:, [0,1,2,9]]
 y = df['Taus']
-
+m = df['xa']
 scaler = MinMaxScaler()
 X = scaler.fit_transform(x)
 
-loaded_model = jb.load('Tout_MLP_alle.pkl')
+loaded_model = jb.load('Tout_MLP_rho.pkl')
 
 
 
@@ -31,6 +31,21 @@ print(mean)
 
 print(predictions)
 
+Intervall_start = 0.50
+Intervall_ende = 0.70
+
+# Punkte im Intervall filtern
+in_interval = (m >= Intervall_start) & (m <= Intervall_ende)
+
+# Punkte außerhalb des Intervalls
+out_of_interval = ~in_interval
+
+# Punkte innerhalb des Intervalls in rot plotten
+plt.scatter(y[in_interval], predictions[in_interval], c='blue',s=5, label='Innerhalb Intervall')
+
+# Punkte außerhalb des Intervalls in schwarz plotten
+plt.scatter(y[out_of_interval], predictions[out_of_interval], c='black',s=5, label='Außerhalb Intervall')
+
 plt.rcParams["font.family"]="Arial"
 plt.xlabel('Wahrer Wert / K',fontsize = 11)
 plt.ylabel('Vorhergesagter Wert / K', fontsize = 11)
@@ -42,9 +57,7 @@ plt.gca().spines['right'].set_linewidth(2)
 plt.gca().spines['bottom'].set_linewidth(2)
 plt.gca().spines['left'].set_linewidth(2)
 
-plt.scatter(y,predictions,s=5)
 plt.plot([min(y), max(y)], [min(predictions), max(predictions)], linestyle='--', color='red', label='1:1-Linie')
-
 save_path = 'C:\\Users\\ilyas\\OneDrive\\Desktop\\'
 plt.savefig(save_path+'Pred_Tout_binary_alle',dpi=500)
 
