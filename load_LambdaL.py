@@ -11,6 +11,10 @@ df = pd.read_excel("binarymixture2.xlsx")
 x = df.iloc[:, [0,1,2,3,4]]
 y = df['LambdaL']
 
+m = df['xa']
+
+
+
 scaler = MinMaxScaler()
 X = scaler.fit_transform(x)
 
@@ -29,6 +33,21 @@ print(mean_absolute_error(y, predictions))
 print(r2_score(y,predictions))
 print(mean)
 
+Intervall_start = 0.50
+Intervall_ende = 0.70
+
+# Punkte im Intervall filtern
+in_interval = (m >= Intervall_start) & (m <= Intervall_ende)
+
+# Punkte außerhalb des Intervalls
+out_of_interval = ~in_interval
+
+# Punkte innerhalb des Intervalls in rot plotten
+plt.scatter(y[in_interval], predictions[in_interval], c='blue',s=5, label='Innerhalb Intervall')
+
+# Punkte außerhalb des Intervalls in schwarz plotten
+plt.scatter(y[out_of_interval], predictions[out_of_interval], c='black',s=5, label='Außerhalb Intervall')
+
 
 
 
@@ -44,11 +63,15 @@ plt.gca().spines['right'].set_linewidth(2)
 plt.gca().spines['bottom'].set_linewidth(2)
 plt.gca().spines['left'].set_linewidth(2)
 
-plt.scatter(y,predictions,s=5)
+
+
+
 plt.plot([min(y), max(y)], [min(predictions), max(predictions)], linestyle='--', color='red', label='1:1-Linie')
 
-save_path = 'C:\\Users\\ilyas\\OneDrive\\Desktop\\'
-plt.savefig(save_path+'Pred_LambdaL_binary_alle',dpi=500)
-
-
 plt.show()
+save_path = 'C:\\Users\\ilyas\\OneDrive\\Desktop\\'
+plt.savefig(save_path+'Pred_LambdaL_binary_alle_',dpi=500)
+
+
+
+
