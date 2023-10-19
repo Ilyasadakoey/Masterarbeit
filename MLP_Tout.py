@@ -12,7 +12,7 @@ from sklearn.preprocessing import MinMaxScaler
 df = pd.read_excel("Datensatz.xlsx") #Einlesen der Daten
 
 y = df['T_a'] # Output ''
-X = df.iloc[:, [0,1,2,3,4]]
+X = df.iloc[:, [0,1,2,9]]
 
 scaler = MinMaxScaler()
 X = scaler.fit_transform(X, y)
@@ -23,13 +23,20 @@ X = scaler.fit_transform(X, y)
 Xtrain, Xtest, Ytrain, Ytest = train_test_split(X, y, random_state=10, test_size=0.2)
 
 
-NN = MLPRegressor(activation="relu", hidden_layer_sizes=(100,100,100),learning_rate='adaptive',solver='adam',alpha=0.0001,max_iter=1000)
+NN = MLPRegressor(activation="tanh", hidden_layer_sizes=(75),learning_rate='adaptive',solver='adam',alpha=0.0001,max_iter=1000)
 
 model = NN.fit(Xtrain, Ytrain)
 
 NN_pred = NN.predict(Xtest)
 n = np.sum(Ytrain)
 mean = n/len(Ytrain)
+
+np.set_printoptions(threshold=np.inf)
+
+rs = np.reshape(NN_pred,(2750,1))
+
+with open('T_predict.txt', 'a') as f:
+    f.write(str(rs))
 
 
 print(np.sqrt(mean_squared_error(Ytest, NN_pred)))
@@ -59,7 +66,7 @@ plt.gca().spines['left'].set_linewidth(2)
 
 plt.show()
 
-dump(model,'Tout_MLP_alle.pkl')
+dump(model,'Tout_MLP_rho.pkl')
 
 
 
