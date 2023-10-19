@@ -9,24 +9,39 @@ from joblib import dump, load
 from sklearn.preprocessing import MinMaxScaler
 
 
+# creates an ANN for the volumetric efficiency
+
+
+# load the simulated data
 df = pd.read_excel("Datensatz.xlsx") #Einlesen der Daten
+
+# define inputs and outputs
 
 y = df['LambdaL'] # Output ''
 X = df.iloc[:, [0,1,2,3,4]]
 
+# scale the inputs
+
 scaler = MinMaxScaler()
 X = scaler.fit_transform(X, y)
 
-
+# split the data
 
 Xtrain, Xtest, Ytrain, Ytest = train_test_split(X, y, random_state=10, test_size=0.2)
 
+# create the ANN
 
 NN = MLPRegressor(activation="relu", hidden_layer_sizes=(75,75,75),learning_rate='adaptive',solver='adam',alpha=0.0001)
 
+# train the model
+
 model = NN.fit(Xtrain, Ytrain)
 
+# test the model
+
 NN_pred = NN.predict(Xtest)
+
+# calculate RMSE and R²
 
 n = np.sum(Ytrain)
 mean = n/len(Ytrain)
@@ -36,15 +51,7 @@ print(mean_absolute_error(Ytest, NN_pred))
 print(r2_score(Ytest,NN_pred))
 print(mean)
 
-#with open ('vorhergesagt.txt','a') as f:
- #    for v in NN_pred:
-
-  #      f.write(str(v)+ '\n')
-
-#with open('wahr.txt', 'a') as f:
- #   for v in Ytest:
-  #      f.write(str(v) + '\n')
-
+# plot the results
 
 plt.rcParams["font.family"]="Arial"
 plt.scatter(Ytest,NN_pred,s=5)
@@ -63,6 +70,8 @@ save_path = 'C:\\Users\\ilyas\\OneDrive\\Desktop\\'
 plt.savefig(save_path+'MLPforLambdaL_rho',dpi=500)
 
 plt.show()
+
+# save the model
 
 dump(model,'LambdaL_MLP_alle.pkl')
 
