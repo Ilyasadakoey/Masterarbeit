@@ -18,7 +18,7 @@ df = pd.read_excel("Datensatz.xlsx") #Einlesen der Daten
 # define inputs and outputs
 
 y = df['LambdaL'] # Output ''
-X = df.iloc[:, [0,1,2,3,4]]
+X = df.iloc[:, [0,1,2,9]]
 
 # scale the inputs
 
@@ -31,7 +31,7 @@ Xtrain, Xtest, Ytrain, Ytest = train_test_split(X, y, random_state=10, test_size
 
 # create the ANN
 
-NN = MLPRegressor(activation="relu", hidden_layer_sizes=(75,75,75),learning_rate='adaptive',solver='adam',alpha=0.0001)
+NN = MLPRegressor(activation="relu", hidden_layer_sizes=(250,250,250),learning_rate='constant',solver='adam',alpha=0.0001)
 
 # train the model
 
