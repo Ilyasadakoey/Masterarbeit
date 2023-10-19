@@ -73,7 +73,7 @@ plt.show()
 
 # save the model
 
-dump(model,'LambdaL_MLP_alle.pkl')
+dump(model,'LambdaL_MLP_rho.pkl')
 
 
 
