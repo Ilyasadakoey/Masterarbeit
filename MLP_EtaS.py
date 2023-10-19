@@ -8,30 +8,37 @@ from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 from joblib import dump, load
 from sklearn.preprocessing import MinMaxScaler
 
+# Creates an ANN for the isentropic efficiency
 
+# load the simulated data
 df = pd.read_excel("Datensatz.xlsx") #Einlesen der Daten
+
+# define inputs and outputs
 
 y = df['EtaS'] # Output ''
 X = df.iloc[:, [0,1,2,3,4]]
 
 
+# scale inputs
 
 scaler = MinMaxScaler()
 X = scaler.fit_transform(X, y)
 
-
-
-
-
+# split inputs and outputs
 
 Xtrain, Xtest, Ytrain, Ytest = train_test_split(X, y, random_state=10, test_size=0.2)
 
-
+# run the regressor, hyperparameters depend on hypersearch results
 NN = MLPRegressor(activation="relu", hidden_layer_sizes=(300,300,300),learning_rate='adaptive',solver='adam',alpha=0.0001)
 
+# train the model
 model = NN.fit(Xtrain, Ytrain)
 
+# test the model
+
 NN_pred = NN.predict(Xtest)
+
+# calculate RSME and R²
 
 n = np.sum(Ytrain)
 mean = n/len(Ytrain)
@@ -41,15 +48,7 @@ print(mean_absolute_error(Ytest, NN_pred))
 print(r2_score(Ytest,NN_pred))
 print(mean)
 
-#with open ('vorhergesagt_eta_sens.txt','a') as f:
- #    for v in NN_pred:
-
-  #      f.write(str(v)+ '\n')
-
-#with open('wahr_eta_sens.txt', 'a') as f:
- #  for v in Ytest:
-  #     f.write(str(v) + '\n')
-
+# plot and save the results
 
 plt.rcParams["font.family"]="Arial"
 plt.scatter(Ytest,NN_pred,s=5)
@@ -64,10 +63,12 @@ plt.gca().spines['right'].set_linewidth(2)
 plt.gca().spines['bottom'].set_linewidth(2)
 plt.gca().spines['left'].set_linewidth(2)
 
-#save_path = 'C:\\Users\\ilyas\\OneDrive\\Desktop\\'
-#plt.savefig(save_path+'MLPforEtaS_rho',dpi=500)
+save_path = 'C:\\Users\\ilyas\\OneDrive\\Desktop\\'
+plt.savefig(save_path+'MLPforEtaS_rho',dpi=500)
 
-#plt.show()
+plt.show()
+
+# save the model to use it later
 
 dump(model,'EtaS_MLP_alle.pkl')
 
