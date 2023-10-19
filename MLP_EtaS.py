@@ -16,7 +16,7 @@ df = pd.read_excel("Datensatz.xlsx") #Einlesen der Daten
 # define inputs and outputs
 
 y = df['EtaS'] # Output ''
-X = df.iloc[:, [0,1,2,3,4]]
+X = df.iloc[:, [0,1,2,9]]
 
 
 # scale inputs
